@@ -1,4 +1,4 @@
-## Interface: 90207
+## Interface: 100000
 ## Title: GladiatorWinsTracker
 ## Version: 1.12
 ## Notes: Track Gladiator wins
