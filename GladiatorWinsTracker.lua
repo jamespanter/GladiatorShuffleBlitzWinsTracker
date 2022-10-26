@@ -50,7 +50,9 @@ function setUpButton()
 
 	GWT_Button:SetScript("OnClick", function()
 		-- Check that theres a valid achievement ID and not already obtained
-		if currentAchievementId ~= 0 and not characterHasObtainedAchievement then
+		if currentAchievementId == 0 then
+			message("|cffffff00No active pvp season found|r")
+		elseif not characterHasObtainedAchievement then
 			local trackedAchievements = { GetTrackedAchievements() }
 			-- Handle no tracked achievements
 			if trackedAchievements[1] == nil then
