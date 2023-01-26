@@ -1,6 +1,6 @@
-## Interface: 100002
+## Interface: 100005
 ## Title: GladiatorWinsTracker
-## Version: 1.15
+## Version: 1.16
 ## Notes: Track Gladiator wins
 ## Author: Dezopri
 ## SavedVariablesPerCharacter: GWT_HideButton
