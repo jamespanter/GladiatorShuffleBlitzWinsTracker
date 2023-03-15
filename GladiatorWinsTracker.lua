@@ -114,7 +114,8 @@ function setCurrentPVPSeasonAchieveId()
 	elseif currentPVPSeason == 32 then currentAchievementId = 15352 -- Gladiator: Shadowlands Season 3
 	elseif currentPVPSeason == 33 then currentAchievementId = 15605 -- Gladiator: Shadowlands Season 4
 	elseif currentPVPSeason == 34 then currentAchievementId = 15957 -- Gladiator: Dragonflight Season 1
-	elseif currentPVPSeason == 35 then currentAchievementId = 15957 -- Gladiator: Dragonflight Season 2 (to be added when known)
+	elseif currentPVPSeason == 35 then currentAchievementId = 17740 -- Gladiator: Dragonflight Season 2
+	elseif currentPVPSeason == 36 then currentAchievementId = 17740 -- Gladiator: Dragonflight Season 3 (to be updated once added)
 	else currentAchievementId = 0 end -- Default case for if addon very out of date
 end
 
