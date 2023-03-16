@@ -222,7 +222,7 @@ function createOptions()
     hideLoginIntro:SetPoint("TOPLEFT", accountSectionText, "TOPLEFT", 40, -35)
 
 	local versionText = panel:CreateFontString(nil, "ARTWORK", "GameFontDisable")
-    versionText:SetText("|cffffff00Version:|r |cffffffffv"..GWTVersion.."|r")
+    versionText:SetText("|cffffff00Version:|r |cffffffff"..GWTVersion.."|r")
     versionText:SetJustifyH("RIGHT")
     versionText:SetSize(600, 40)
     versionText:SetPoint("TOPLEFT", panel, "TOPLEFT", 0, -5)
