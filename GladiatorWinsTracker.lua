@@ -53,20 +53,7 @@ function setUpButton()
 		if currentAchievementId == 0 then
 			message("|cffffff00No active pvp season found|r")
 		elseif not characterHasObtainedAchievement then
-			local trackedAchievements = { GetTrackedAchievements() }
-			-- Handle no tracked achievements
-			if trackedAchievements[1] == nil then
-				RunScript("AddTrackedAchievement(" .. currentAchievementId .. ")")
-			end
-			-- Iterate over tracked achievements
-			for i,v in ipairs(trackedAchievements) do
-				if v == currentAchievementId then
-					RunScript("RemoveTrackedAchievement(" .. currentAchievementId .. ")")
-				-- dont add achieve if 10 tracked already
-				elseif GetNumTrackedAchievements() < 10 then
-					RunScript("AddTrackedAchievement(" .. currentAchievementId .. ")")
-				end
-			end
+			C_ContentTracking.ToggleTracking(2, currentAchievementId, 2)
 		end
 	end)
 end
