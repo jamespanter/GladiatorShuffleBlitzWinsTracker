@@ -6,7 +6,7 @@ GWT:RegisterEvent("PLAYER_LOGIN")
 GWT:RegisterEvent("ACHIEVEMENT_EARNED")
 
 GWT:SetScript("OnEvent", function(self, event, arg1)
-	if event == "ADDON_LOADED" and arg1 == "GladiatorWinsTracker" then
+	if event == "ADDON_LOADED" and arg1 == "GladiatorShuffleWinsTracker" then
 	-- Set character glad saved variable if none
 		if not GWT_HideButton then
 			GWT_HideButton = "default"
@@ -39,7 +39,7 @@ GWT:SetScript("OnEvent", function(self, event, arg1)
 		setCharacterHasObtainedShuffleLegendAchievement()
 		createOptions()
 		if GWT_LoginIntro == "true" then
-			print("|cff33ff99Gladiator Wins Tracker|r - use |cffFF4500 /gwt |r to open options")
+			print("|cff33ff99Gladiator & Shuffle Wins Tracker|r - use |cffFF4500 /gwt |r to open options")
 		end
 	end
 
@@ -123,7 +123,7 @@ function updateShuffleButtonVisibility()
 end
 
 function setGWTVersion()
-	local version = GetAddOnMetadata("GladiatorWinsTracker", "Version")
+	local version = GetAddOnMetadata("GladiatorShuffleWinsTracker", "Version")
 	GWTVersion = version
 end
 
@@ -212,9 +212,9 @@ end
 local SimpleOptions = LibStub("LibSimpleOptions-1.01")
 
 function createOptions()
-	local panel = SimpleOptions.AddOptionsPanel("Gladiator Wins Tracker", function() end)
-    SimpleOptions.AddSlashCommand("Gladiator Wins Tracker","/gwt")
-	local title, subText = panel:MakeTitleTextAndSubText("Gladiator Wins Tracker", "")
+	local panel = SimpleOptions.AddOptionsPanel("Gladiator & Shuffle Wins Tracker", function() end)
+    SimpleOptions.AddSlashCommand("Gladiator & Shuffle Wins Tracker","/gwt")
+	local title, subText = panel:MakeTitleTextAndSubText("Gladiator & Shuffle Wins Tracker", "")
 
 	local characterSpecificSectionText = panel:CreateFontString(nil, "ARTWORK", "GameFontDisable")
     characterSpecificSectionText:SetText("|cffffff00Character specific settings:|r")

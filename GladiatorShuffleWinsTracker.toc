@@ -1,13 +1,14 @@
 ## Interface: 100206
-## Title: GladiatorWinsTracker
+## Title: Gladiator & Shuffle Wins Tracker
 ## Version: @project-version@
-## Notes: Track Gladiator wins
+## Notes: Track Gladiator & Shuffle Wins
 ## Author: Dezopri
 ## SavedVariablesPerCharacter: GWT_HideButton, SWT_HideButton
 ## SavedVariables: GWT_LoginIntro
 ## X-Curse-Project-ID: 453750
+## IconTexture: Interface\Icons\Achievement_Arena_3v3_5.PNG
 
 libs\LibStub.lua
 libs\LibSimpleOptions-1.01.lua
 
-GladiatorWinsTracker.lua
+GladiatorShuffleWinsTracker.lua

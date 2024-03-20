@@ -1,4 +1,4 @@
-# Gladiator Wins Tracker
+# Gladiator & Shuffle Wins Tracker
 
 Adds 2 buttons to the rated PVP tab:
 
@@ -12,7 +12,7 @@ Adds 2 buttons to the rated PVP tab:
 
 - **/gwt** -- open the options panel
 
-![Screenshot of options panel](https://imgur.com/QKSsYJn.png)
+![Screenshot of options panel](https://imgur.com/KTC39O5.png)
 
 ##### Note:
 
