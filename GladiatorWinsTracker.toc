@@ -1,4 +1,4 @@
-## Interface: 100205
+## Interface: 100206
 ## Title: GladiatorWinsTracker
 ## Version: @project-version@
 ## Notes: Track Gladiator wins
