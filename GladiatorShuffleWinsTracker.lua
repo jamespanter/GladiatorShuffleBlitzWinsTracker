@@ -7,17 +7,17 @@ GWT:RegisterEvent("ACHIEVEMENT_EARNED")
 
 GWT:SetScript("OnEvent", function(self, event, arg1)
 	if event == "ADDON_LOADED" and arg1 == "GladiatorShuffleWinsTracker" then
-	-- Set character glad saved variable if none
+		-- Set character glad saved variable if none
 		if not GWT_HideButton then
 			GWT_HideButton = "default"
 		end
 
-	-- Set character shuffle saved variable if none
-	if not SWT_HideButton then
-		SWT_HideButton = "default"
-	end
+		-- Set character shuffle saved variable if none
+		if not SWT_HideButton then
+			SWT_HideButton = "default"
+		end
 
-	-- Set account saved variable if none
+		-- Set account saved variable if none
 		if not GWT_LoginIntro then
 			GWT_LoginIntro = "true"
 		end
