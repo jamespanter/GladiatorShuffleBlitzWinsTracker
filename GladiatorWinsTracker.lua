@@ -1,4 +1,4 @@
-local GWTVersion, currentAchievementId, characterHasObtainedAchievement, GWT_Button
+local GWTVersion, currentGladAchievementId, currentLegendAchievementId, characterHasObtainedGladAchievement, characterHasObtainedLegendAchievement, GWT_Button, SWT_Button
 
 local GWT = CreateFrame("frame")
 GWT:RegisterEvent("ADDON_LOADED")
@@ -7,10 +7,16 @@ GWT:RegisterEvent("ACHIEVEMENT_EARNED")
 
 GWT:SetScript("OnEvent", function(self, event, arg1)
 	if event == "ADDON_LOADED" and arg1 == "GladiatorWinsTracker" then
-	-- Set character saved variable if none
+	-- Set character glad saved variable if none
 		if not GWT_HideButton then
 			GWT_HideButton = "default"
 		end
+
+	-- Set character shuffle saved variable if none
+	if not SWT_HideButton then
+		SWT_HideButton = "default"
+	end
+
 	-- Set account saved variable if none
 		if not GWT_LoginIntro then
 			GWT_LoginIntro = "true"
@@ -19,15 +25,18 @@ GWT:SetScript("OnEvent", function(self, event, arg1)
 
 	-- Only setup the button once the parent frame has loaded
 	if event == "ADDON_LOADED" and arg1 == "Blizzard_PVPUI" then
-		setUpButton()
-		updateButtonVisibility()
+		setUpButtons()
+		updateGladButtonVisibility()
+		updateShuffleButtonVisibility()
 	end
 
 	-- Setup variables
 	if event == "PLAYER_LOGIN" then
 		setGWTVersion()
-		setCurrentPVPSeasonAchieveId()
-		setCharacterHasObtainedAchievement()
+		setCurrentPVPSeasonGladAchieveId()
+		setCurrentPVPSeasonShuffleLegendAchieveId()
+		setCharacterHasObtainedGladAchievement()
+		setCharacterHasObtainedShuffleLegendAchievement()
 		createOptions()
 		if GWT_LoginIntro == "true" then
 			print("|cff33ff99Gladiator Wins Tracker|r - use |cffFF4500 /gwt |r to open options")
@@ -35,13 +44,15 @@ GWT:SetScript("OnEvent", function(self, event, arg1)
 	end
 
 	-- Check if button should hide after achievement obtained during session
-	if event == "ACHIEVEMENT_EARNED" and arg1 == currentAchievementId then
-		setCharacterHasObtainedAchievement()
-		updateButtonVisibility()
+	if event == "ACHIEVEMENT_EARNED" and arg1 == currentGladAchievementId then
+		setCharacterHasObtainedGladAchievement()
+		setCharacterHasObtainedShuffleLegendAchievement()
+		updateGladButtonVisibility()
+		updateShuffleButtonVisibility()
 	end
 end)
 
-function setUpButton()
+function setUpButtons()
 	-- ConquestFrame is not nil as Blizzard_PVPUI has loaded
 	GWT_Button = CreateFrame("Button", "GWTButton", ConquestFrame, "UIPanelButtonTemplate")
 	GWT_Button:SetSize(200, 35)
@@ -50,18 +61,33 @@ function setUpButton()
 
 	GWT_Button:SetScript("OnClick", function()
 		-- Check that theres a valid achievement ID and not already obtained
-		if currentAchievementId == 0 then
+		if currentGladAchievementId == 0 then
 			message("|cffffff00No active pvp season found|r")
-		elseif not characterHasObtainedAchievement then
-			C_ContentTracking.ToggleTracking(2, currentAchievementId, 2)
+		elseif not characterHasObtainedGladAchievement then
+			C_ContentTracking.ToggleTracking(2, currentGladAchievementId, 2)
+		end
+	end)
+
+	-- ConquestFrame is not nil as Blizzard_PVPUI has loaded
+	SWT_Button = CreateFrame("Button", "SWTButton", ConquestFrame, "UIPanelButtonTemplate")
+	SWT_Button:SetSize(200, 35)
+	SWT_Button:SetText("Track Shuffle Legend Wins")
+	SWT_Button:SetPoint("BOTTOMRIGHT", 168, -70)
+
+	SWT_Button:SetScript("OnClick", function()
+		-- Check that theres a valid achievement ID and not already obtained
+		if currentLegendAchievementId == 0 then
+			message("|cffffff00No active pvp season found|r")
+		elseif not characterHasObtainedLegendAchievement then
+			C_ContentTracking.ToggleTracking(2, currentLegendAchievementId, 2)
 		end
 	end)
 end
 
-function updateButtonVisibility()
+function updateGladButtonVisibility()
 	-- Check if button visibility has been overridden
 	if GWT_HideButton == "default" then
-		if characterHasObtainedAchievement then
+		if characterHasObtainedGladAchievement then
 			GWT_Button:Hide()
 		else
 			GWT_Button:Show()
@@ -69,10 +95,29 @@ function updateButtonVisibility()
 	elseif GWT_HideButton == "true" then
 		GWT_Button:Hide()
 	elseif GWT_HideButton == "false" then
-		if characterHasObtainedAchievement then
+		if characterHasObtainedGladAchievement then
 			GWT_Button:Hide()
 		else
 			GWT_Button:Show()
+		end
+	end
+end
+
+function updateShuffleButtonVisibility()
+	-- Check if button visibility has been overridden
+	if SWT_HideButton == "default" then
+		if characterHasObtainedLegendAchievement then
+			SWT_Button:Hide()
+		else
+			SWT_Button:Show()
+		end
+	elseif SWT_HideButton == "true" then
+		SWT_Button:Hide()
+	elseif SWT_HideButton == "false" then
+		if characterHasObtainedLegendAchievement then
+			SWT_Button:Hide()
+		else
+			SWT_Button:Show()
 		end
 	end
 end
@@ -82,32 +127,51 @@ function setGWTVersion()
 	GWTVersion = version
 end
 
-function setCharacterHasObtainedAchievement()
-	if currentAchievementId ~= 0 then
-		local id, _, _, completed, _, _, _, _, _, _, _, _, wasEarnedByMe = GetAchievementInfo(currentAchievementId)
+function setCharacterHasObtainedGladAchievement()
+	if currentGladAchievementId ~= 0 then
+		local id, _, _, completed, _, _, _, _, _, _, _, _, wasEarnedByMe = GetAchievementInfo(currentGladAchievementId)
 		if completed and wasEarnedByMe then
-			characterHasObtainedAchievement = true
+			characterHasObtainedGladAchievement = true
 		else 
-			characterHasObtainedAchievement = false
+			characterHasObtainedGladAchievement = false
 		end
 	end
 end
 
-function setCurrentPVPSeasonAchieveId()
-	local currentPVPSeason = GetCurrentArenaSeason()
-	if currentPVPSeason == 0 then currentAchievementId = 0 -- No active arena season
-	elseif currentPVPSeason == 30 then currentAchievementId = 14689 -- Gladiator: Shadowlands Season 1
-	elseif currentPVPSeason == 31 then currentAchievementId = 14972 -- Gladiator: Shadowlands Season 2
-	elseif currentPVPSeason == 32 then currentAchievementId = 15352 -- Gladiator: Shadowlands Season 3
-	elseif currentPVPSeason == 33 then currentAchievementId = 15605 -- Gladiator: Shadowlands Season 4
-	elseif currentPVPSeason == 34 then currentAchievementId = 15957 -- Gladiator: Dragonflight Season 1
-	elseif currentPVPSeason == 35 then currentAchievementId = 17740 -- Gladiator: Dragonflight Season 2
-	elseif currentPVPSeason == 36 then currentAchievementId = 19091 -- Gladiator: Dragonflight Season 3
-	elseif currentPVPSeason == 37 then currentAchievementId = 19091 -- Gladiator: Dragonflight Season 4 (to be updated once added)
-	else currentAchievementId = 0 end -- Default case for if addon very out of date
+function setCharacterHasObtainedShuffleLegendAchievement()
+	if currentLegendAchievementId ~= 0 then
+		local id, _, _, completed, _, _, _, _, _, _, _, _, wasEarnedByMe = GetAchievementInfo(currentLegendAchievementId)
+		if completed and wasEarnedByMe then
+			characterHasObtainedLegendAchievement = true
+		else 
+			characterHasObtainedLegendAchievement = false
+		end
+	end
 end
 
-function setCharSavedVariable(state)
+function setCurrentPVPSeasonGladAchieveId()
+	local currentPVPSeason = GetCurrentArenaSeason()
+	if currentPVPSeason == 0 then currentGladAchievementId = 0 -- No active arena season
+	elseif currentPVPSeason == 30 then currentGladAchievementId = 14689 -- Gladiator: Shadowlands Season 1
+	elseif currentPVPSeason == 31 then currentGladAchievementId = 14972 -- Gladiator: Shadowlands Season 2
+	elseif currentPVPSeason == 32 then currentGladAchievementId = 15352 -- Gladiator: Shadowlands Season 3
+	elseif currentPVPSeason == 33 then currentGladAchievementId = 15605 -- Gladiator: Shadowlands Season 4
+	elseif currentPVPSeason == 34 then currentGladAchievementId = 15957 -- Gladiator: Dragonflight Season 1
+	elseif currentPVPSeason == 35 then currentGladAchievementId = 17740 -- Gladiator: Dragonflight Season 2
+	elseif currentPVPSeason == 36 then currentGladAchievementId = 19091 -- Gladiator: Dragonflight Season 3
+	elseif currentPVPSeason == 37 then currentGladAchievementId = 19091 -- Gladiator: Dragonflight Season 4 (to be updated once added)
+	else currentGladAchievementId = 0 end -- Default case for if addon very out of date
+end
+
+function setCurrentPVPSeasonShuffleLegendAchieveId()
+	local currentPVPSeason = GetCurrentArenaSeason()
+	if currentPVPSeason == 0 then currentLegendAchievementId = 0 -- No active arena season
+	elseif currentPVPSeason == 36 then currentLegendAchievementId = 19304 -- Legend: Dragonflight Season 3
+	elseif currentPVPSeason == 37 then currentLegendAchievementId = 19500 -- Legend: Dragonflight Season 4 (to be updated once added)
+	else currentLegendAchievementId = 0 end -- Default case for if addon very out of date
+end
+
+function setCharGladSavedVariable(state)
 	if state == "hide" then
 		GWT_HideButton = "true"
 	elseif state == "show" then
@@ -116,7 +180,20 @@ function setCharSavedVariable(state)
 		GWT_HideButton = "default"
 	end
 	if GWT_Button then
-		updateButtonVisibility()
+		updateGladButtonVisibility()
+	end
+end
+
+function setCharShuffleSavedVariable(state)
+	if state == "hide" then
+		SWT_HideButton = "true"
+	elseif state == "show" then
+		SWT_HideButton = "false"
+	elseif state == "reset" then
+		SWT_HideButton = "default"
+	end
+	if SWT_Button then
+		updateShuffleButtonVisibility()
 	end
 end
 
@@ -145,8 +222,8 @@ function createOptions()
     characterSpecificSectionText:SetSize(600, 40)
 	characterSpecificSectionText:SetPoint("TOPLEFT", panel, "TOPLEFT", 16, -30)
 
-	local hideButtonToggle = panel:MakeToggle(
-	    'name', 'Always hide button on this character',
+	local hideGladButtonToggle = panel:MakeToggle(
+	    'name', 'Never show GLADIATOR button on this character',
 	    'description', 'Hide button in Rated PVP tab',
 	    'default', false,
 	    'getFunc', function()
@@ -158,25 +235,47 @@ function createOptions()
 		end,
 	    'setFunc', function(value)
 			if value == true then
-				setCharSavedVariable("hide")
+				setCharGladSavedVariable("hide")
 			elseif value == false then
-				setCharSavedVariable("show")
+				setCharGladSavedVariable("show")
 			end
 		end
 	)
-	hideButtonToggle:SetPoint("TOPLEFT", characterSpecificSectionText, "TOPLEFT", 40, -35)
+	hideGladButtonToggle:SetPoint("TOPLEFT", characterSpecificSectionText, "TOPLEFT", 40, -35)
+
+	local hideShuffleButtonToggle = panel:MakeToggle(
+	    'name', 'Never show SHUFFLE LEGEND button on this character',
+	    'description', 'Hide button in Rated PVP tab',
+	    'default', false,
+	    'getFunc', function()
+			if SWT_HideButton == "true" then
+				return true
+			elseif SWT_HideButton == "false" or SWT_HideButton == "default" then
+				return false
+			end
+		end,
+	    'setFunc', function(value)
+			if value == true then
+				setCharShuffleSavedVariable("hide")
+			elseif value == false then
+				setCharShuffleSavedVariable("show")
+			end
+		end
+	)
+	hideShuffleButtonToggle:SetPoint("TOPLEFT", characterSpecificSectionText, "TOPLEFT", 40, -70)
 
 	local noteText = panel:CreateFontString(nil, "ARTWORK", "GameFontDisable")
-    noteText:SetText("|cffffff00|r |cffffffff(Note: Button always hidden if character has obtained Gladiator this season)|r")
+    noteText:SetText("|cffffff00|r |cffffffffNote: Button hidden automatically if character has obtained achievement this season|r")
     noteText:SetJustifyH("LEFT")
     noteText:SetSize(600, 40)
-    noteText:SetPoint("TOPLEFT", hideButtonToggle, "TOPLEFT", 0, -20)
+    noteText:SetPoint("TOPLEFT", hideShuffleButtonToggle, "TOPLEFT", 0, -20)
 
 	local resetButton = panel:MakeButton(
 	    'name', 'Reset',
 	    'description', 'Restore default settings',
 	    'func', function()
-			setCharSavedVariable("reset")
+			setCharGladSavedVariable("reset")
+			setCharShuffleSavedVariable("reset")
 			panel:Refresh()
 		end
 	)
@@ -189,8 +288,8 @@ function createOptions()
 	accountSectionText:SetPoint("TOPLEFT", resetButton, "TOPLEFT", -40, -30)
 
 	local hideLoginIntro = panel:MakeToggle(
-	    'name', 'Disable Intro',
-	    'description', 'Disable intro text for all characters',
+	    'name', 'Disable login message',
+	    'description', 'Disable login message for all characters',
 	    'default', false,
 	    'getFunc', function()
 			if GWT_LoginIntro == "true" then

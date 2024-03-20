@@ -3,7 +3,7 @@
 ## Version: @project-version@
 ## Notes: Track Gladiator wins
 ## Author: Dezopri
-## SavedVariablesPerCharacter: GWT_HideButton
+## SavedVariablesPerCharacter: GWT_HideButton, SWT_HideButton
 ## SavedVariables: GWT_LoginIntro
 ## X-Curse-Project-ID: 453750
 

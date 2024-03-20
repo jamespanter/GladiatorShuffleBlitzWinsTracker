@@ -1,20 +1,19 @@
 # Gladiator Wins Tracker
 
-Adds a button to the **rated PVP tab** that tracks the gladiator achievement for the current PVP season. Allowing players to see how many wins they need without having to search wowhead for the script.
+Adds 2 buttons to the rated PVP tab:
 
-![Screenshot of button](https://i.imgur.com/jWtUHvd.png)
-![Screenshot of achievement](https://i.imgur.com/raNnO6m.png)
+1. Tracks the **Gladiator** achievement for the current PVP season
+2. Tracks the **Shuffle Legend** achievement for the current PVP season
 
-### Explanation:
-
-The default Blizzard achievement UI does not provide a way to track this achievement (unless you have already obtained it on another character).
+![Screenshot of button](https://imgur.com/vfBbRcu.png)
+![Screenshot of achievement](https://imgur.com/lIiIcQr.png)
 
 ### Commands:
 
 - **/gwt** -- open the options panel
 
-![Screenshot of options panel](https://i.imgur.com/Q8DsV6p.png)
+![Screenshot of options panel](https://imgur.com/QKSsYJn.png)
 
 ##### Note:
 
-- Button is hidden if the character (not account) has **completed** the achievement
+- Button is automatically hidden if the character (not account) has **completed** the achievement
