@@ -159,7 +159,7 @@ function setCurrentPVPSeasonGladAchieveId()
 	elseif currentPVPSeason == 34 then currentGladAchievementId = 15957 -- Gladiator: Dragonflight Season 1
 	elseif currentPVPSeason == 35 then currentGladAchievementId = 17740 -- Gladiator: Dragonflight Season 2
 	elseif currentPVPSeason == 36 then currentGladAchievementId = 19091 -- Gladiator: Dragonflight Season 3
-	elseif currentPVPSeason == 37 then currentGladAchievementId = 19454 -- Gladiator: Dragonflight Season 4
+	elseif currentPVPSeason == 37 then currentGladAchievementId = 19490 -- Gladiator: Dragonflight Season 4
 	else currentGladAchievementId = 0 end -- Default case for if addon very out of date
 end
 
@@ -167,7 +167,7 @@ function setCurrentPVPSeasonShuffleLegendAchieveId()
 	local currentPVPSeason = GetCurrentArenaSeason()
 	if currentPVPSeason == 0 then currentLegendAchievementId = 0 -- No active arena season
 	elseif currentPVPSeason == 36 then currentLegendAchievementId = 19304 -- Legend: Dragonflight Season 3
-	elseif currentPVPSeason == 37 then currentLegendAchievementId = 19453 -- Legend: Dragonflight Season 4
+	elseif currentPVPSeason == 37 then currentLegendAchievementId = 19500 -- Legend: Dragonflight Season 4
 	else currentLegendAchievementId = 0 end -- Default case for if addon very out of date
 end
 
