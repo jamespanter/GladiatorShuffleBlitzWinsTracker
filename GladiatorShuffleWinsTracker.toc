@@ -1,4 +1,4 @@
-## Interface: 100206
+## Interface: 100207
 ## Title: Gladiator & Shuffle Wins Tracker
 ## Version: @project-version@
 ## Notes: Track Gladiator & Shuffle Wins
