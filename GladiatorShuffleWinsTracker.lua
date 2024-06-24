@@ -123,7 +123,7 @@ function updateShuffleButtonVisibility()
 end
 
 function setGWTVersion()
-	local version = GetAddOnMetadata("GladiatorShuffleWinsTracker", "Version")
+	local version = C_AddOns.GetAddOnMetadata("GladiatorShuffleWinsTracker", "Version")
 	GWTVersion = version
 end
 
