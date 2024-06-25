@@ -1,11 +1,10 @@
 local GWTVersion, currentGladAchievementId, currentLegendAchievementId, characterHasObtainedGladAchievement, characterHasObtainedLegendAchievement, GWT_Button, SWT_Button
 
-local GWT = CreateFrame("frame")
-GWT:RegisterEvent("ADDON_LOADED")
-GWT:RegisterEvent("PLAYER_LOGIN")
-GWT:RegisterEvent("ACHIEVEMENT_EARNED")
-
-GWT:SetScript("OnEvent", function(self, event, arg1)
+local eventFrame = CreateFrame("Frame")
+eventFrame:RegisterEvent("ADDON_LOADED")
+eventFrame:RegisterEvent("PLAYER_LOGIN")
+eventFrame:RegisterEvent("ACHIEVEMENT_EARNED")
+eventFrame:SetScript("OnEvent", function(self, event, arg1)
 	if event == "ADDON_LOADED" and arg1 == "GladiatorShuffleWinsTracker" then
 		-- Set character glad saved variable if none
 		if not GWT_HideButton then
@@ -21,11 +20,13 @@ GWT:SetScript("OnEvent", function(self, event, arg1)
 		if not GWT_LoginIntro then
 			GWT_LoginIntro = "true"
 		end
+
+		registerOptionsPanel()
 	end
 
 	-- Only setup the button once the parent frame has loaded
 	if event == "ADDON_LOADED" and arg1 == "Blizzard_PVPUI" then
-		setUpButtons()
+		createButtons()
 		updateGladButtonVisibility()
 		updateShuffleButtonVisibility()
 	end
@@ -37,7 +38,7 @@ GWT:SetScript("OnEvent", function(self, event, arg1)
 		setCurrentPVPSeasonShuffleLegendAchieveId()
 		setCharacterHasObtainedGladAchievement()
 		setCharacterHasObtainedShuffleLegendAchievement()
-		createOptions()
+
 		if GWT_LoginIntro == "true" then
 			print("|cff33ff99Gladiator & Shuffle Wins Tracker|r - use |cffFF4500 /gwt |r to open options")
 		end
@@ -52,7 +53,7 @@ GWT:SetScript("OnEvent", function(self, event, arg1)
 	end
 end)
 
-function setUpButtons()
+function createButtons()
 	-- ConquestFrame is not nil as Blizzard_PVPUI has loaded
 	GWT_Button = CreateFrame("Button", "GWTButton", ConquestFrame, "UIPanelButtonTemplate")
 	GWT_Button:SetSize(200, 35)
@@ -132,7 +133,7 @@ function setCharacterHasObtainedGladAchievement()
 		local id, _, _, completed, _, _, _, _, _, _, _, _, wasEarnedByMe = GetAchievementInfo(currentGladAchievementId)
 		if completed and wasEarnedByMe then
 			characterHasObtainedGladAchievement = true
-		else 
+		else
 			characterHasObtainedGladAchievement = false
 		end
 	end
@@ -143,7 +144,7 @@ function setCharacterHasObtainedShuffleLegendAchievement()
 		local id, _, _, completed, _, _, _, _, _, _, _, _, wasEarnedByMe = GetAchievementInfo(currentLegendAchievementId)
 		if completed and wasEarnedByMe then
 			characterHasObtainedLegendAchievement = true
-		else 
+		else
 			characterHasObtainedLegendAchievement = false
 		end
 	end
@@ -151,26 +152,44 @@ end
 
 function setCurrentPVPSeasonGladAchieveId()
 	local currentPVPSeason = GetCurrentArenaSeason()
-	if currentPVPSeason == 0 then currentGladAchievementId = 0 -- No active arena season
-	elseif currentPVPSeason == 30 then currentGladAchievementId = 14689 -- Gladiator: Shadowlands Season 1
-	elseif currentPVPSeason == 31 then currentGladAchievementId = 14972 -- Gladiator: Shadowlands Season 2
-	elseif currentPVPSeason == 32 then currentGladAchievementId = 15352 -- Gladiator: Shadowlands Season 3
-	elseif currentPVPSeason == 33 then currentGladAchievementId = 15605 -- Gladiator: Shadowlands Season 4
-	elseif currentPVPSeason == 34 then currentGladAchievementId = 15957 -- Gladiator: Dragonflight Season 1
-	elseif currentPVPSeason == 35 then currentGladAchievementId = 17740 -- Gladiator: Dragonflight Season 2
-	elseif currentPVPSeason == 36 then currentGladAchievementId = 19091 -- Gladiator: Dragonflight Season 3
-	elseif currentPVPSeason == 37 then currentGladAchievementId = 19490 -- Gladiator: Dragonflight Season 4
-	elseif currentPVPSeason == 38 then currentGladAchievementId = 40393 -- Gladiator: The War Within Season 1
-	else currentGladAchievementId = 0 end -- Default case for if addon very out of date
+	if currentPVPSeason == 0 then
+		currentGladAchievementId = 0 -- No active arena season
+	elseif currentPVPSeason == 30 then
+		currentGladAchievementId = 14689 -- Gladiator: Shadowlands Season 1
+	elseif currentPVPSeason == 31 then
+		currentGladAchievementId = 14972 -- Gladiator: Shadowlands Season 2
+	elseif currentPVPSeason == 32 then
+		currentGladAchievementId = 15352 -- Gladiator: Shadowlands Season 3
+	elseif currentPVPSeason == 33 then
+		currentGladAchievementId = 15605 -- Gladiator: Shadowlands Season 4
+	elseif currentPVPSeason == 34 then
+		currentGladAchievementId = 15957 -- Gladiator: Dragonflight Season 1
+	elseif currentPVPSeason == 35 then
+		currentGladAchievementId = 17740 -- Gladiator: Dragonflight Season 2
+	elseif currentPVPSeason == 36 then
+		currentGladAchievementId = 19091 -- Gladiator: Dragonflight Season 3
+	elseif currentPVPSeason == 37 then
+		currentGladAchievementId = 19490 -- Gladiator: Dragonflight Season 4
+	elseif currentPVPSeason == 38 then
+		currentGladAchievementId = 40393 -- Gladiator: The War Within Season 1
+	else
+		currentGladAchievementId = 0
+	end -- Default case for if addon very out of date
 end
 
 function setCurrentPVPSeasonShuffleLegendAchieveId()
 	local currentPVPSeason = GetCurrentArenaSeason()
-	if currentPVPSeason == 0 then currentLegendAchievementId = 0 -- No active arena season
-	elseif currentPVPSeason == 36 then currentLegendAchievementId = 19304 -- Legend: Dragonflight Season 3
-	elseif currentPVPSeason == 37 then currentLegendAchievementId = 19500 -- Legend: Dragonflight Season 4
-	elseif currentPVPSeason == 38 then currentLegendAchievementId = 40395 -- Legend: The War Within Season 1
-	else currentLegendAchievementId = 0 end -- Default case for if addon very out of date
+	if currentPVPSeason == 0 then
+		currentLegendAchievementId = 0 -- No active arena season
+	elseif currentPVPSeason == 36 then
+		currentLegendAchievementId = 19304 -- Legend: Dragonflight Season 3
+	elseif currentPVPSeason == 37 then
+		currentLegendAchievementId = 19500 -- Legend: Dragonflight Season 4
+	elseif currentPVPSeason == 38 then
+		currentLegendAchievementId = 40395 -- Legend: The War Within Season 1
+	else
+		currentLegendAchievementId = 0
+	end -- Default case for if addon very out of date
 end
 
 function setCharGladSavedVariable(state)
@@ -211,114 +230,114 @@ end
 -- OPTIONS PANEL
 --------------------------------------------
 
-local SimpleOptions = LibStub("LibSimpleOptions-1.01")
+-- Function to register the options panel
+function registerOptionsPanel()
+	local optionsPanel = createOptionsPanel()
 
-function createOptions()
-	local panel = SimpleOptions.AddOptionsPanel("Gladiator & Shuffle Wins Tracker", function() end)
-    SimpleOptions.AddSlashCommand("Gladiator & Shuffle Wins Tracker","/gwt")
-	local title, subText = panel:MakeTitleTextAndSubText("Gladiator & Shuffle Wins Tracker", "")
+	-- Register the options panel with the Settings API
+	local category, layout = Settings.RegisterCanvasLayoutCategory(optionsPanel, "Gladiator & Shuffle Wins Tracker")
+	Settings.RegisterAddOnCategory(category)
 
-	local characterSpecificSectionText = panel:CreateFontString(nil, "ARTWORK", "GameFontDisable")
-    characterSpecificSectionText:SetText("|cffffff00Character specific settings:|r")
-    characterSpecificSectionText:SetJustifyH("LEFT")
-    characterSpecificSectionText:SetSize(600, 40)
-	characterSpecificSectionText:SetPoint("TOPLEFT", panel, "TOPLEFT", 16, -30)
+	-- Slash command to open the settings
+	SLASH_GWT1 = "/gwt"
+	SlashCmdList["GWT"] = function()
+		Settings.OpenToCategory(category.ID)
+	end
+end
 
-	local hideGladButtonToggle = panel:MakeToggle(
-	    'name', 'Never show GLADIATOR button on this character',
-	    'description', 'Hide button in Rated PVP tab',
-	    'default', false,
-	    'getFunc', function()
-			if GWT_HideButton == "true" then
-				return true
-			elseif GWT_HideButton == "false" or GWT_HideButton == "default" then
-				return false
+function createOptionsPanel()
+	local frame = CreateFrame("Frame", "GWTOptionsPanel", UIParent)
+	frame.name = "Gladiator & Shuffle Wins Tracker"
+
+	local function newCheckbox(label, onClick)
+		local check = CreateFrame("CheckButton", "GWTCheck" .. label, frame, "InterfaceOptionsCheckButtonTemplate")
+		check:SetScript("OnClick", function(self)
+			local tick = self:GetChecked()
+			onClick(self, tick and true or false)
+		end)
+		check.label = _G[check:GetName() .. "Text"]
+		check.label:SetText(label)
+		return check
+	end
+
+	frame:SetScript("OnShow", function()
+		local title = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+		title:SetPoint("TOPLEFT", 16, -16)
+		title:SetText("Gladiator & Shuffle Wins Tracker")
+
+		local charTitle = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+		charTitle:SetText("|cffffff00Character Specific Settings|r")
+		charTitle:SetPoint("TOPLEFT", title, "BOTTOMLEFT", -2, -16)
+
+		local hideGladCheckbox = newCheckbox("Never show GLADIATOR button on this character",
+			function(self, value)
+				if value == true then
+					setCharGladSavedVariable("hide")
+				elseif value == false then
+					setCharGladSavedVariable("show")
+				end
 			end
-		end,
-	    'setFunc', function(value)
-			if value == true then
-				setCharGladSavedVariable("hide")
-			elseif value == false then
-				setCharGladSavedVariable("show")
-			end
-		end
-	)
-	hideGladButtonToggle:SetPoint("TOPLEFT", characterSpecificSectionText, "TOPLEFT", 40, -35)
+		)
+		-- Ensure the checkbox state is set based on the current value
+		hideGladCheckbox:SetChecked(GWT_HideButton == "true")
+		hideGladCheckbox:SetPoint("TOPLEFT", charTitle, "BOTTOMLEFT", 20, -16)
 
-	local hideShuffleButtonToggle = panel:MakeToggle(
-	    'name', 'Never show SHUFFLE LEGEND button on this character',
-	    'description', 'Hide button in Rated PVP tab',
-	    'default', false,
-	    'getFunc', function()
-			if SWT_HideButton == "true" then
-				return true
-			elseif SWT_HideButton == "false" or SWT_HideButton == "default" then
-				return false
+		local hideShuffleCheckbox = newCheckbox("Never show SHUFFLE LEGEND button on this character",
+			function(self, value)
+				if value == true then
+					setCharShuffleSavedVariable("hide")
+				elseif value == false then
+					setCharShuffleSavedVariable("show")
+				end
 			end
-		end,
-	    'setFunc', function(value)
-			if value == true then
-				setCharShuffleSavedVariable("hide")
-			elseif value == false then
-				setCharShuffleSavedVariable("show")
-			end
-		end
-	)
-	hideShuffleButtonToggle:SetPoint("TOPLEFT", characterSpecificSectionText, "TOPLEFT", 40, -70)
+		)
+		-- Ensure the checkbox state is set based on the current value
+		hideShuffleCheckbox:SetChecked(SWT_HideButton == "true")
+		hideShuffleCheckbox:SetPoint("TOPLEFT", hideGladCheckbox, "BOTTOMLEFT", 0, -8)
 
-	local noteText = panel:CreateFontString(nil, "ARTWORK", "GameFontDisable")
-    noteText:SetText("|cffffff00|r |cffffffffNote: Button hidden automatically if character has obtained achievement this season|r")
-    noteText:SetJustifyH("LEFT")
-    noteText:SetSize(600, 40)
-    noteText:SetPoint("TOPLEFT", hideShuffleButtonToggle, "TOPLEFT", 0, -20)
-
-	local resetButton = panel:MakeButton(
-	    'name', 'Reset',
-	    'description', 'Restore default settings',
-	    'func', function()
+		local resetButton = CreateFrame("Button", "GTWResetButton", frame, "UIPanelButtonTemplate")
+		resetButton:SetText("Reset")
+		resetButton:SetWidth(90)
+		resetButton:SetHeight(30)
+		resetButton:SetPoint("TOPLEFT", hideShuffleCheckbox, "BOTTOMLEFT", -20, -15)
+		resetButton:SetScript("OnClick", function()
 			setCharGladSavedVariable("reset")
 			setCharShuffleSavedVariable("reset")
-			panel:Refresh()
-		end
-	)
-	resetButton:SetPoint("TOPLEFT", noteText, "TOPLEFT", 0, -40)
 
-	local accountSectionText = panel:CreateFontString(nil, "ARTWORK", "GameFontDisable")
-    accountSectionText:SetText("|cffffff00Account settings:|r")
-    accountSectionText:SetJustifyH("LEFT")
-    accountSectionText:SetSize(600, 40)
-	accountSectionText:SetPoint("TOPLEFT", resetButton, "TOPLEFT", -40, -30)
+			hideGladCheckbox:SetChecked(GWT_HideButton == "true")
+			hideShuffleCheckbox:SetChecked(SWT_HideButton == "true")
+		end)
 
-	local hideLoginIntro = panel:MakeToggle(
-	    'name', 'Disable login message',
-	    'description', 'Disable login message for all characters',
-	    'default', false,
-	    'getFunc', function()
-			if GWT_LoginIntro == "true" then
-				return false
-			elseif GWT_LoginIntro == "false" then
-				return true
+		local accountSettingsTitle = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+		accountSettingsTitle:SetText("|cffffff00Account Settings|r")
+		accountSettingsTitle:SetPoint("TOPLEFT", resetButton, "BOTTOMLEFT", -2, -16)
+
+		local hideIntroCheckbox = newCheckbox("Disable login message",
+			function(self, value)
+				if value == true then
+					setAccountSavedVariable("hide")
+				elseif value == false then
+					setAccountSavedVariable("show")
+				end
 			end
-		end,
-	    'setFunc', function(value)
-			if value == true then
-				setAccountSavedVariable("hide")
-			elseif value == false then
-				setAccountSavedVariable("show")
-			end
-		end
-	)
-    hideLoginIntro:SetPoint("TOPLEFT", accountSectionText, "TOPLEFT", 40, -35)
+		)
+		-- Ensure the checkbox state is set based on the current value
+		hideIntroCheckbox:SetChecked(GWT_LoginIntro ~= "true")
+		hideIntroCheckbox:SetPoint("TOPLEFT", accountSettingsTitle, "TOPLEFT", 20, -25)
 
-	local versionText = panel:CreateFontString(nil, "ARTWORK", "GameFontDisable")
-    versionText:SetText("|cffffff00Version:|r |cffffffff"..GWTVersion.."|r")
-    versionText:SetJustifyH("RIGHT")
-    versionText:SetSize(600, 40)
-    versionText:SetPoint("TOPLEFT", panel, "TOPLEFT", 0, -5)
+		local versionText = frame:CreateFontString(nil, "ARTWORK", "GameFontDisable")
+		versionText:SetText("|cffffff00Version:|r |cffffffff" .. GWTVersion .. "|r")
+		versionText:SetJustifyH("RIGHT")
+		versionText:SetSize(600, 40)
+		versionText:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, -5)
 
-	local authorText = panel:CreateFontString(nil, "ARTWORK", "GameFontDisable")
-    authorText:SetText("|cffffff00Author:|r |cffffffffDezopri|r")
-    authorText:SetJustifyH("RIGHT")
-    authorText:SetSize(600, 40)
-    authorText:SetPoint("TOPLEFT", versionText, "TOPLEFT", 0, -20)
+		local authorText = frame:CreateFontString(nil, "ARTWORK", "GameFontDisable")
+		authorText:SetText("|cffffff00Author:|r |cffffffffDezopri|r")
+		authorText:SetJustifyH("RIGHT")
+		authorText:SetSize(600, 40)
+		authorText:SetPoint("TOPLEFT", versionText, "TOPLEFT", 0, -20)
+
+		frame:SetScript("OnShow", nil)
+	end)
+	return frame
 end
