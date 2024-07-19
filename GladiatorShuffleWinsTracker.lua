@@ -63,7 +63,7 @@ function createButtons()
 	GWT_Button:SetScript("OnClick", function()
 		-- Check that theres a valid achievement ID and not already obtained
 		if currentGladAchievementId == 0 then
-			message("|cffffff00No active pvp season found|r")
+			message("|cffffff00No active pvp season found - please check addon is up to date.|r")
 		elseif not characterHasObtainedGladAchievement then
 			C_ContentTracking.ToggleTracking(2, currentGladAchievementId, 2)
 		end
@@ -78,7 +78,7 @@ function createButtons()
 	SWT_Button:SetScript("OnClick", function()
 		-- Check that theres a valid achievement ID and not already obtained
 		if currentLegendAchievementId == 0 then
-			message("|cffffff00No active pvp season found|r")
+			message("|cffffff00No active pvp season found - please check addon is up to date.|r")
 		elseif not characterHasObtainedLegendAchievement then
 			C_ContentTracking.ToggleTracking(2, currentLegendAchievementId, 2)
 		end
