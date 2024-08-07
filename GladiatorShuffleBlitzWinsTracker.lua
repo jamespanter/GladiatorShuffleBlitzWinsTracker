@@ -5,7 +5,7 @@ eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:RegisterEvent("PLAYER_LOGIN")
 eventFrame:RegisterEvent("ACHIEVEMENT_EARNED")
 eventFrame:SetScript("OnEvent", function(self, event, arg1)
-	if event == "ADDON_LOADED" and arg1 == "GladiatorShuffleWinsTracker" then
+	if event == "ADDON_LOADED" and arg1 == "GladiatorShuffleBlitzWinsTracker" then
 		-- Set character glad saved variable if none
 		if not GWT_HideButton then
 			GWT_HideButton = "default"
@@ -50,7 +50,7 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
 		setCharacterHasObtainedBlitzStrategistAchievement()
 
 		if GWT_LoginIntro == "true" then
-			print("|cff33ff99Gladiator & Shuffle Wins Tracker|r - use |cffFF4500 /gwt |r to open options")
+			print("|cff33ff99Gladiator, Shuffle & Blitz Wins Tracker|r - use |cffFF4500 /gwt |r to open options")
 		end
 	end
 
@@ -70,7 +70,7 @@ function createButtons()
 	-- ConquestFrame is not nil as Blizzard_PVPUI has loaded
 	GWT_Button = CreateFrame("Button", "GWTButton", ConquestFrame, "UIPanelButtonTemplate")
 	GWT_Button:SetSize(200, 35)
-	GWT_Button:SetText("Track Gladiator Wins")
+	GWT_Button:SetText("Track 3v3 Gladiator Wins")
 	GWT_Button:SetPoint("BOTTOMRIGHT", 168, -34)
 
 	GWT_Button:SetScript("OnClick", function()
@@ -171,7 +171,7 @@ function updateBlitzButtonVisibility()
 end
 
 function setGWTVersion()
-	local version = C_AddOns.GetAddOnMetadata("GladiatorShuffleWinsTracker", "Version")
+	local version = C_AddOns.GetAddOnMetadata("GladiatorShuffleBlitzWinsTracker", "Version")
 	GWTVersion = version
 end
 
@@ -317,7 +317,8 @@ function registerOptionsPanel()
 	local optionsPanel = createOptionsPanel()
 
 	-- Register the options panel with the Settings API
-	local category, layout = Settings.RegisterCanvasLayoutCategory(optionsPanel, "Gladiator & Shuffle Wins Tracker")
+	local category, layout = Settings.RegisterCanvasLayoutCategory(optionsPanel,
+		"Gladiator, Shuffle & Blitz Wins Tracker")
 	Settings.RegisterAddOnCategory(category)
 
 	-- Slash command to open the settings
@@ -329,7 +330,7 @@ end
 
 function createOptionsPanel()
 	local frame = CreateFrame("Frame", "GWTOptionsPanel", UIParent)
-	frame.name = "Gladiator & Shuffle Wins Tracker"
+	frame.name = "Gladiator, Shuffle & Blitz Wins Tracker"
 
 	local function newCheckbox(label, onClick)
 		local check = CreateFrame("CheckButton", "GWTCheck" .. label, frame, "InterfaceOptionsCheckButtonTemplate")
@@ -345,7 +346,7 @@ function createOptionsPanel()
 	frame:SetScript("OnShow", function()
 		local title = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 		title:SetPoint("TOPLEFT", 16, -16)
-		title:SetText("Gladiator & Shuffle Wins Tracker")
+		title:SetText("Gladiator, Shuffle & Blitz Wins Tracker")
 
 		local charTitle = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 		charTitle:SetText("|cffffff00Character Specific Settings|r")

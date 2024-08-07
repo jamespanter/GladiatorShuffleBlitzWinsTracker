@@ -1,8 +1,8 @@
 ## Interface: 110000
 
-## Title: GladiatorShuffleWinsTracker
+## Title: GladiatorShuffleBlitzWinsTracker
 ## Version: @project-version@
-## Notes: Track Gladiator & Shuffle Wins
+## Notes: Track Gladiator, Shuffle & Blitz Wins
 ## Author: Dezopri
 ## IconTexture: Interface\Icons\Achievement_Arena_3v3_5.PNG
 
@@ -13,4 +13,4 @@
 ## SavedVariablesPerCharacter: GWT_HideButton, SWT_HideButton, BWT_HideButton
 ## SavedVariables: GWT_LoginIntro
 
-GladiatorShuffleWinsTracker.lua
+GladiatorShuffleBlitzWinsTracker.lua
