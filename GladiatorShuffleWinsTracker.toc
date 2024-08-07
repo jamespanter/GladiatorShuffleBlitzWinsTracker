@@ -10,7 +10,7 @@
 ## X-WoWI-ID: 26768
 ## X-Wago-ID: QKyw5EN7
 
-## SavedVariablesPerCharacter: GWT_HideButton, SWT_HideButton
+## SavedVariablesPerCharacter: GWT_HideButton, SWT_HideButton, BWT_HideButton
 ## SavedVariables: GWT_LoginIntro
 
 GladiatorShuffleWinsTracker.lua

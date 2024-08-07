@@ -1,4 +1,4 @@
-local GWTVersion, currentGladAchievementId, currentLegendAchievementId, characterHasObtainedGladAchievement, characterHasObtainedLegendAchievement, GWT_Button, SWT_Button
+local GWTVersion, currentGladAchievementId, currentLegendAchievementId, currentBlitzAchievementId, characterHasObtainedGladAchievement, characterHasObtainedLegendAchievement, characterHasObtainedBlitzAchievement, GWT_Button, SWT_Button, BWT_Button
 
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("ADDON_LOADED")
@@ -16,6 +16,11 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
 			SWT_HideButton = "default"
 		end
 
+		-- Set character blitz saved variable if none
+		if not BWT_HideButton then
+			BWT_HideButton = "default"
+		end
+
 		-- Set account saved variable if none
 		if not GWT_LoginIntro then
 			GWT_LoginIntro = "true"
@@ -29,15 +34,20 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
 		createButtons()
 		updateGladButtonVisibility()
 		updateShuffleButtonVisibility()
+		updateBlitzButtonVisibility()
 	end
 
 	-- Setup variables
 	if event == "PLAYER_LOGIN" then
 		setGWTVersion()
+
 		setCurrentPVPSeasonGladAchieveId()
 		setCurrentPVPSeasonShuffleLegendAchieveId()
+		setCurrentPVPSeasonBlitzStrategistAchieveId()
+
 		setCharacterHasObtainedGladAchievement()
 		setCharacterHasObtainedShuffleLegendAchievement()
+		setCharacterHasObtainedBlitzStrategistAchievement()
 
 		if GWT_LoginIntro == "true" then
 			print("|cff33ff99Gladiator & Shuffle Wins Tracker|r - use |cffFF4500 /gwt |r to open options")
@@ -48,8 +58,11 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
 	if event == "ACHIEVEMENT_EARNED" and arg1 == currentGladAchievementId then
 		setCharacterHasObtainedGladAchievement()
 		setCharacterHasObtainedShuffleLegendAchievement()
+		setCharacterHasObtainedBlitzStrategistAchievement()
+
 		updateGladButtonVisibility()
 		updateShuffleButtonVisibility()
+		updateBlitzButtonVisibility()
 	end
 end)
 
@@ -81,6 +94,21 @@ function createButtons()
 			message("|cffffff00No active pvp season found - please check addon is up to date.|r")
 		elseif not characterHasObtainedLegendAchievement then
 			C_ContentTracking.ToggleTracking(2, currentLegendAchievementId, 2)
+		end
+	end)
+
+	-- ConquestFrame is not nil as Blizzard_PVPUI has loaded
+	BWT_Button = CreateFrame("Button", "BWTButton", ConquestFrame, "UIPanelButtonTemplate")
+	BWT_Button:SetSize(200, 35)
+	BWT_Button:SetText("Track Blitz Strategist Wins")
+	BWT_Button:SetPoint("BOTTOMRIGHT", 168, -106)
+
+	BWT_Button:SetScript("OnClick", function()
+		-- Check that theres a valid achievement ID and not already obtained
+		if currentBlitzAchievementId == 0 then
+			message("|cffffff00No active pvp season found - please check addon is up to date.|r")
+		elseif not characterHasObtainedBlitzAchievement then
+			C_ContentTracking.ToggleTracking(2, currentBlitzAchievementId, 2)
 		end
 	end)
 end
@@ -123,6 +151,25 @@ function updateShuffleButtonVisibility()
 	end
 end
 
+function updateBlitzButtonVisibility()
+	-- Check if button visibility has been overridden
+	if BWT_HideButton == "default" then
+		if characterHasObtainedBlitzAchievement then
+			BWT_Button:Hide()
+		else
+			BWT_Button:Show()
+		end
+	elseif BWT_HideButton == "true" then
+		BWT_Button:Hide()
+	elseif BWT_HideButton == "false" then
+		if characterHasObtainedBlitzAchievement then
+			BWT_Button:Hide()
+		else
+			BWT_Button:Show()
+		end
+	end
+end
+
 function setGWTVersion()
 	local version = C_AddOns.GetAddOnMetadata("GladiatorShuffleWinsTracker", "Version")
 	GWTVersion = version
@@ -146,6 +193,17 @@ function setCharacterHasObtainedShuffleLegendAchievement()
 			characterHasObtainedLegendAchievement = true
 		else
 			characterHasObtainedLegendAchievement = false
+		end
+	end
+end
+
+function setCharacterHasObtainedBlitzStrategistAchievement()
+	if currentBlitzAchievementId ~= 0 then
+		local id, _, _, completed, _, _, _, _, _, _, _, _, wasEarnedByMe = GetAchievementInfo(currentBlitzAchievementId)
+		if completed and wasEarnedByMe then
+			characterHasObtainedBlitzAchievement = true
+		else
+			characterHasObtainedBlitzAchievement = false
 		end
 	end
 end
@@ -192,6 +250,17 @@ function setCurrentPVPSeasonShuffleLegendAchieveId()
 	end -- Default case for if addon very out of date
 end
 
+function setCurrentPVPSeasonBlitzStrategistAchieveId()
+	local currentPVPSeason = GetCurrentArenaSeason()
+	if currentPVPSeason == 0 then
+		currentBlitzAchievementId = 0 -- No active arena season
+	elseif currentPVPSeason == 38 then
+		currentBlitzAchievementId = 40233 -- Strategist: The War Within Season 1
+	else
+		currentBlitzAchievementId = 0
+	end -- Default case for if addon very out of date
+end
+
 function setCharGladSavedVariable(state)
 	if state == "hide" then
 		GWT_HideButton = "true"
@@ -215,6 +284,19 @@ function setCharShuffleSavedVariable(state)
 	end
 	if SWT_Button then
 		updateShuffleButtonVisibility()
+	end
+end
+
+function setCharBlitzSavedVariable(state)
+	if state == "hide" then
+		BWT_HideButton = "true"
+	elseif state == "show" then
+		BWT_HideButton = "false"
+	elseif state == "reset" then
+		BWT_HideButton = "default"
+	end
+	if BWT_Button then
+		updateBlitzButtonVisibility()
 	end
 end
 
@@ -295,17 +377,32 @@ function createOptionsPanel()
 		hideShuffleCheckbox:SetChecked(SWT_HideButton == "true")
 		hideShuffleCheckbox:SetPoint("TOPLEFT", hideGladCheckbox, "BOTTOMLEFT", 0, -8)
 
+		local hideBlitzCheckbox = newCheckbox("Never show BLITZ STRATEGIST button on this character",
+			function(self, value)
+				if value == true then
+					setCharBlitzSavedVariable("hide")
+				elseif value == false then
+					setCharBlitzSavedVariable("show")
+				end
+			end
+		)
+		-- Ensure the checkbox state is set based on the current value
+		hideBlitzCheckbox:SetChecked(BWT_HideButton == "true")
+		hideBlitzCheckbox:SetPoint("TOPLEFT", hideShuffleCheckbox, "BOTTOMLEFT", 0, -8)
+
 		local resetButton = CreateFrame("Button", "GTWResetButton", frame, "UIPanelButtonTemplate")
 		resetButton:SetText("Reset")
 		resetButton:SetWidth(90)
 		resetButton:SetHeight(30)
-		resetButton:SetPoint("TOPLEFT", hideShuffleCheckbox, "BOTTOMLEFT", -20, -15)
+		resetButton:SetPoint("TOPLEFT", hideBlitzCheckbox, "BOTTOMLEFT", -20, -15)
 		resetButton:SetScript("OnClick", function()
 			setCharGladSavedVariable("reset")
 			setCharShuffleSavedVariable("reset")
+			setCharBlitzSavedVariable("reset")
 
 			hideGladCheckbox:SetChecked(GWT_HideButton == "true")
 			hideShuffleCheckbox:SetChecked(SWT_HideButton == "true")
+			hideBlitzCheckbox:SetChecked(BWT_HideButton == "true")
 		end)
 
 		local accountSettingsTitle = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
