@@ -32,9 +32,7 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
 	-- Only setup the button once the parent frame has loaded
 	if event == "ADDON_LOADED" and arg1 == "Blizzard_PVPUI" then
 		createButtons()
-		updateGladButtonVisibility()
-		updateShuffleButtonVisibility()
-		updateBlitzButtonVisibility()
+		updateButtonsVisibility()
 	end
 
 	-- Setup variables
@@ -60,9 +58,7 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
 		setCharacterHasObtainedShuffleLegendAchievement()
 		setCharacterHasObtainedBlitzStrategistAchievement()
 
-		updateGladButtonVisibility()
-		updateShuffleButtonVisibility()
-		updateBlitzButtonVisibility()
+		updateButtonsVisibility()
 	end
 end)
 
@@ -113,59 +109,81 @@ function createButtons()
 	end)
 end
 
-function updateGladButtonVisibility()
+function updateButtonsVisibility()
+	local currentYOffset = -36 -- Starting Y offset for the first visible button
+	local padding = 36      -- Padding between buttons
+
+	-- Function to update button position based on its visibility
+	local function setButtonVisibility(button, show)
+		if show then
+			button:Show()
+			button:SetPoint("BOTTOMRIGHT", 168, currentYOffset)
+			-- Move the Y offset for the next button
+			currentYOffset = currentYOffset - padding
+		else
+			button:Hide()
+		end
+	end
+
+	-- Position each button based on its visibility
+	setButtonVisibility(GWT_Button, shouldShowGladButton())
+	setButtonVisibility(SWT_Button, shouldShowShuffleButton())
+	setButtonVisibility(BWT_Button, shouldShowBlitzButton())
+end
+
+function shouldShowGladButton()
 	-- Check if button visibility has been overridden
 	if GWT_HideButton == "default" then
 		if characterHasObtainedGladAchievement then
-			GWT_Button:Hide()
+			return false
 		else
-			GWT_Button:Show()
+			return true
 		end
 	elseif GWT_HideButton == "true" then
-		GWT_Button:Hide()
+		return false
 	elseif GWT_HideButton == "false" then
 		if characterHasObtainedGladAchievement then
-			GWT_Button:Hide()
+			return false
 		else
-			GWT_Button:Show()
+			return true
 		end
 	end
 end
 
-function updateShuffleButtonVisibility()
+function shouldShowShuffleButton()
 	-- Check if button visibility has been overridden
 	if SWT_HideButton == "default" then
 		if characterHasObtainedLegendAchievement then
-			SWT_Button:Hide()
+			return false
 		else
-			SWT_Button:Show()
+			return true
 		end
 	elseif SWT_HideButton == "true" then
-		SWT_Button:Hide()
+		return false
 	elseif SWT_HideButton == "false" then
 		if characterHasObtainedLegendAchievement then
-			SWT_Button:Hide()
+			return false
 		else
-			SWT_Button:Show()
+			return true
 		end
 	end
 end
 
-function updateBlitzButtonVisibility()
+function shouldShowBlitzButton()
 	-- Check if button visibility has been overridden
 	if BWT_HideButton == "default" then
 		if characterHasObtainedBlitzAchievement then
-			BWT_Button:Hide()
+			return false
 		else
-			BWT_Button:Show()
+			return true
 		end
 	elseif BWT_HideButton == "true" then
-		BWT_Button:Hide()
+		return false
 	elseif BWT_HideButton == "false" then
 		if characterHasObtainedBlitzAchievement then
-			BWT_Button:Hide()
+			return false
 		else
-			BWT_Button:Show()
+			return true
 		end
 	end
 end
@@ -270,7 +288,7 @@ function setCharGladSavedVariable(state)
 		GWT_HideButton = "default"
 	end
 	if GWT_Button then
-		updateGladButtonVisibility()
+		updateButtonsVisibility()
 	end
 end
 
@@ -283,7 +301,7 @@ function setCharShuffleSavedVariable(state)
 		SWT_HideButton = "default"
 	end
 	if SWT_Button then
-		updateShuffleButtonVisibility()
+		updateButtonsVisibility()
 	end
 end
 
@@ -296,7 +314,7 @@ function setCharBlitzSavedVariable(state)
 		BWT_HideButton = "default"
 	end
 	if BWT_Button then
-		updateBlitzButtonVisibility()
+		updateButtonsVisibility()
 	end
 end
 
