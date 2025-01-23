@@ -39,9 +39,7 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
 	if event == "PLAYER_LOGIN" then
 		setGWTVersion()
 
-		setCurrentPVPSeasonGladAchieveId()
-		setCurrentPVPSeasonShuffleLegendAchieveId()
-		setCurrentPVPSeasonBlitzStrategistAchieveId()
+		setCurrentPVPSeasonAchievementIds()
 
 		setCharacterHasObtainedGladAchievement()
 		setCharacterHasObtainedShuffleLegendAchievement()
@@ -226,57 +224,11 @@ function setCharacterHasObtainedBlitzStrategistAchievement()
 	end
 end
 
-function setCurrentPVPSeasonGladAchieveId()
+function setCurrentPVPSeasonAchievementIds()
 	local currentPVPSeason = GetCurrentArenaSeason()
-	if currentPVPSeason == 0 then
-		currentGladAchievementId = 0 -- No active arena season
-	elseif currentPVPSeason == 30 then
-		currentGladAchievementId = 14689 -- Gladiator: Shadowlands Season 1
-	elseif currentPVPSeason == 31 then
-		currentGladAchievementId = 14972 -- Gladiator: Shadowlands Season 2
-	elseif currentPVPSeason == 32 then
-		currentGladAchievementId = 15352 -- Gladiator: Shadowlands Season 3
-	elseif currentPVPSeason == 33 then
-		currentGladAchievementId = 15605 -- Gladiator: Shadowlands Season 4
-	elseif currentPVPSeason == 34 then
-		currentGladAchievementId = 15957 -- Gladiator: Dragonflight Season 1
-	elseif currentPVPSeason == 35 then
-		currentGladAchievementId = 17740 -- Gladiator: Dragonflight Season 2
-	elseif currentPVPSeason == 36 then
-		currentGladAchievementId = 19091 -- Gladiator: Dragonflight Season 3
-	elseif currentPVPSeason == 37 then
-		currentGladAchievementId = 19490 -- Gladiator: Dragonflight Season 4
-	elseif currentPVPSeason == 38 then
-		currentGladAchievementId = 40393 -- Gladiator: The War Within Season 1
-	else
-		currentGladAchievementId = 0
-	end -- Default case for if addon very out of date
-end
-
-function setCurrentPVPSeasonShuffleLegendAchieveId()
-	local currentPVPSeason = GetCurrentArenaSeason()
-	if currentPVPSeason == 0 then
-		currentLegendAchievementId = 0 -- No active arena season
-	elseif currentPVPSeason == 36 then
-		currentLegendAchievementId = 19304 -- Legend: Dragonflight Season 3
-	elseif currentPVPSeason == 37 then
-		currentLegendAchievementId = 19500 -- Legend: Dragonflight Season 4
-	elseif currentPVPSeason == 38 then
-		currentLegendAchievementId = 40395 -- Legend: The War Within Season 1
-	else
-		currentLegendAchievementId = 0
-	end -- Default case for if addon very out of date
-end
-
-function setCurrentPVPSeasonBlitzStrategistAchieveId()
-	local currentPVPSeason = GetCurrentArenaSeason()
-	if currentPVPSeason == 0 then
-		currentBlitzAchievementId = 0 -- No active arena season
-	elseif currentPVPSeason == 38 then
-		currentBlitzAchievementId = 40233 -- Strategist: The War Within Season 1
-	else
-		currentBlitzAchievementId = 0
-	end -- Default case for if addon very out of date
+	currentGladAchievementId = AchievementIDs.Gladiator[currentPVPSeason] or 0
+	currentLegendAchievementId = AchievementIDs.ShuffleLegend[currentPVPSeason] or 0
+	currentBlitzAchievementId = AchievementIDs.BlitzStrategist[currentPVPSeason] or 0
 end
 
 function setCharGladSavedVariable(state)

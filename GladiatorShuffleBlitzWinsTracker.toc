@@ -14,3 +14,4 @@
 ## SavedVariables: GWT_LoginIntro
 
 GladiatorShuffleBlitzWinsTracker.lua
+GladiatorShuffleBlitzWinsTracker_AchievementIDs.lua
