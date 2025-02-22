@@ -62,10 +62,10 @@ end)
 
 function createButtons()
 	-- ConquestFrame is not nil as Blizzard_PVPUI has loaded
-	GWT_Button = CreateFrame("Button", "GWTButton", ConquestFrame, "UIPanelButtonTemplate")
-	GWT_Button:SetSize(200, 35)
-	GWT_Button:SetText("Track 3v3 Gladiator Wins")
-	GWT_Button:SetPoint("BOTTOMRIGHT", 168, -34)
+	GWT_Button = CreateFrame("Button", "GWTButton", ConquestFrame.Arena3v3, "UIPanelButtonTemplate")
+	GWT_Button:SetSize(25, 25)
+	GWT_Button:SetText(">")
+	GWT_Button:SetPoint("RIGHT", 10, 0)
 
 	GWT_Button:SetScript("OnClick", function()
 		-- Check that theres a valid achievement ID and not already obtained
@@ -77,10 +77,10 @@ function createButtons()
 	end)
 
 	-- ConquestFrame is not nil as Blizzard_PVPUI has loaded
-	SWT_Button = CreateFrame("Button", "SWTButton", ConquestFrame, "UIPanelButtonTemplate")
-	SWT_Button:SetSize(200, 35)
-	SWT_Button:SetText("Track Shuffle Legend Wins")
-	SWT_Button:SetPoint("BOTTOMRIGHT", 168, -70)
+	SWT_Button = CreateFrame("Button", "SWTButton", ConquestFrame.RatedSoloShuffle, "UIPanelButtonTemplate")
+	SWT_Button:SetSize(25, 25)
+	SWT_Button:SetText(">")
+	SWT_Button:SetPoint("RIGHT", 10, 0)
 
 	SWT_Button:SetScript("OnClick", function()
 		-- Check that theres a valid achievement ID and not already obtained
@@ -92,10 +92,10 @@ function createButtons()
 	end)
 
 	-- ConquestFrame is not nil as Blizzard_PVPUI has loaded
-	BWT_Button = CreateFrame("Button", "BWTButton", ConquestFrame, "UIPanelButtonTemplate")
-	BWT_Button:SetSize(200, 35)
-	BWT_Button:SetText("Track Blitz Strategist Wins")
-	BWT_Button:SetPoint("BOTTOMRIGHT", 168, -106)
+	BWT_Button = CreateFrame("Button", "BWTButton", ConquestFrame.RatedBGBlitz, "UIPanelButtonTemplate")
+	BWT_Button:SetSize(25, 25)
+	BWT_Button:SetText(">")
+	BWT_Button:SetPoint("RIGHT", 10, 0)
 
 	BWT_Button:SetScript("OnClick", function()
 		-- Check that theres a valid achievement ID and not already obtained
@@ -108,16 +108,10 @@ function createButtons()
 end
 
 function updateButtonsVisibility()
-	local currentYOffset = -36 -- Starting Y offset for the first visible button
-	local padding = 36      -- Padding between buttons
-
 	-- Function to update button position based on its visibility
 	local function setButtonVisibility(button, show)
 		if show then
 			button:Show()
-			button:SetPoint("BOTTOMRIGHT", 168, currentYOffset)
-			-- Move the Y offset for the next button
-			currentYOffset = currentYOffset - padding
 		else
 			button:Hide()
 		end
