@@ -45,7 +45,7 @@ function createButton(name, parentFrame, achievementId)
 			showIDMissingForSeasonAlert()
 		else
 			local id, _, _, completed, _, _, _, _, _, _, _, _, wasEarnedByMe = GetAchievementInfo(
-				currentGladAchievementId)
+				achievementId)
 			if completed and wasEarnedByMe then
 				showAlreadyCompletedAlert()
 			else
