@@ -46,7 +46,7 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
 		setCharacterHasObtainedBlitzStrategistAchievement()
 
 		if GWT_LoginIntro == "true" then
-			print("|cff33ff99Gladiator, Shuffle & Blitz Wins Tracker|r - use |cffFF4500 /gwt |r to open options")
+			print("|cff33ff99Gladiator, Shuffle & Blitz Wins Tracker|r - use |cffFF4500 /gsbt|r to open options")
 		end
 	end
 
