@@ -46,7 +46,7 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
 		setCharacterHasObtainedBlitzStrategistAchievement()
 
 		if GWT_LoginIntro == "true" then
-			print("|cff33ff99Gladiator, Shuffle & Blitz Wins Tracker|r - use |cffFF4500 /gsbt|r to open options")
+			print("|cff33ff99Gladiator, Shuffle & Blitz Wins Tracker|r - use |cffFF4500/gsbt|r to open options")
 		end
 	end
 
@@ -70,7 +70,7 @@ function createButtons()
 	GWT_Button:SetScript("OnClick", function()
 		-- Check that theres a valid achievement ID and not already obtained
 		if currentGladAchievementId == 0 then
-			message("|cffffff00No active pvp season found - please check addon is up to date.|r")
+			message("|cffffff00No active PVP season found - please check addon is up to date.|r")
 		elseif not characterHasObtainedGladAchievement then
 			C_ContentTracking.ToggleTracking(2, currentGladAchievementId, 2)
 		end
