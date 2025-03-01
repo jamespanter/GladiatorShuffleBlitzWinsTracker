@@ -1,4 +1,4 @@
-local GWTVersion, currentGladAchievementId, currentLegendAchievementId, currentBlitzAchievementId, characterHasObtainedGladAchievement, characterHasObtainedLegendAchievement, characterHasObtainedBlitzAchievement, GWT_Button, SWT_Button, BWT_Button
+local GWTVersion, seasonActive, currentGladAchievementId, currentLegendAchievementId, currentBlitzAchievementId, characterHasObtainedGladAchievement, characterHasObtainedLegendAchievement, characterHasObtainedBlitzAchievement, GWT_Button, SWT_Button, BWT_Button
 
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("ADDON_LOADED")
@@ -69,10 +69,10 @@ function createButtons()
 
 	GWT_Button:SetScript("OnClick", function()
 		-- Check that theres a valid achievement ID and not already obtained
-		if currentGladAchievementId == 0 then
-			message("|cffffff00No active PVP season found.|r")
-		elseif currentGladAchievementId == -1 then
-			message("|cffffff00No achievement ID found for current season - please update addon.|r")
+		if not seasonActive then
+			showNoActiveSeasonAlert()
+		elseif currentGladAchievementId == 0 then
+			showIDMissingForSeasonAlert()
 		elseif not characterHasObtainedGladAchievement then
 			C_ContentTracking.ToggleTracking(2, currentGladAchievementId, 2)
 		end
@@ -86,10 +86,10 @@ function createButtons()
 
 	SWT_Button:SetScript("OnClick", function()
 		-- Check that theres a valid achievement ID and not already obtained
-		if currentLegendAchievementId == 0 then
-			message("|cffffff00No active PVP season found.|r")
-		elseif currentLegendAchievementId == -1 then
-			message("|cffffff00No achievement ID found for current season - please update addon.|r")
+		if not seasonActive then
+			showNoActiveSeasonAlert()
+		elseif currentLegendAchievementId == 0 then
+			showIDMissingForSeasonAlert()
 		elseif not characterHasObtainedLegendAchievement then
 			C_ContentTracking.ToggleTracking(2, currentLegendAchievementId, 2)
 		end
@@ -103,14 +103,22 @@ function createButtons()
 
 	BWT_Button:SetScript("OnClick", function()
 		-- Check that theres a valid achievement ID and not already obtained
-		if currentBlitzAchievementId == 0 then
-			message("|cffffff00No active PVP season found.|r")
-		elseif currentBlitzAchievementId == -1 then
-			message("|cffffff00No achievement ID found for current season - please update addon.|r")
+		if not seasonActive then
+			showNoActiveSeasonAlert()
+		elseif currentBlitzAchievementId == 0 then
+			showIDMissingForSeasonAlert()
 		elseif not characterHasObtainedBlitzAchievement then
 			C_ContentTracking.ToggleTracking(2, currentBlitzAchievementId, 2)
 		end
 	end)
+end
+
+function showNoActiveSeasonAlert()
+	message("|cffffff00No active PVP season found.|r")
+end
+
+function showIDMissingForSeasonAlert()
+	message("|cffffff00Achievement missing for current season - please update addon.|r")
 end
 
 function updateButtonsVisibility()
@@ -226,9 +234,12 @@ end
 
 function setCurrentPVPSeasonAchievementIds()
 	local currentPVPSeason = GetCurrentArenaSeason()
-	currentGladAchievementId = AchievementIDs.Gladiator[currentPVPSeason] or -1
-	currentLegendAchievementId = AchievementIDs.ShuffleLegend[currentPVPSeason] or -1
-	currentBlitzAchievementId = AchievementIDs.BlitzStrategist[currentPVPSeason] or -1
+
+	seasonActive = currentPVPSeason ~= 0
+
+	currentGladAchievementId = AchievementIDs.Gladiator[currentPVPSeason] or 0
+	currentLegendAchievementId = AchievementIDs.ShuffleLegend[currentPVPSeason] or 0
+	currentBlitzAchievementId = AchievementIDs.BlitzStrategist[currentPVPSeason] or 0
 end
 
 function setCharGladSavedVariable(state)
