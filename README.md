@@ -11,7 +11,7 @@ Adds 3 buttons to the rated PVP tab:
 
 ### Commands:
 
-- **/gwt** -- open the options panel
+- **/gsbt** -- open the options panel
 
 ![Screenshot of options panel](https://imgur.com/0AVi3IY.png)
 

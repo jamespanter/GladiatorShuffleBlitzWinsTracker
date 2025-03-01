@@ -286,8 +286,8 @@ function registerOptionsPanel()
 	Settings.RegisterAddOnCategory(category)
 
 	-- Slash command to open the settings
-	SLASH_GWT1 = "/gwt"
-	SlashCmdList["GWT"] = function()
+	SLASH_GSBT1 = "/gsbt"
+	SlashCmdList["GSBT"] = function()
 		Settings.OpenToCategory(category.ID)
 	end
 end
