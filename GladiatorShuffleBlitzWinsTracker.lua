@@ -316,7 +316,7 @@ function createOptionsPanel()
 		charTitle:SetText("|cffffff00Character Specific Settings|r")
 		charTitle:SetPoint("TOPLEFT", title, "BOTTOMLEFT", -2, -16)
 
-		local hideGladCheckbox = newCheckbox("Never show GLADIATOR button on this character",
+		local hideGladCheckbox = newCheckbox("Hide 3v3 button on this character",
 			function(self, value)
 				if value == true then
 					setCharGladSavedVariable("hide")
@@ -329,7 +329,7 @@ function createOptionsPanel()
 		hideGladCheckbox:SetChecked(GWT_HideButton == "true")
 		hideGladCheckbox:SetPoint("TOPLEFT", charTitle, "BOTTOMLEFT", 20, -16)
 
-		local hideShuffleCheckbox = newCheckbox("Never show SHUFFLE LEGEND button on this character",
+		local hideShuffleCheckbox = newCheckbox("Hide Shuffle button on this character",
 			function(self, value)
 				if value == true then
 					setCharShuffleSavedVariable("hide")
@@ -342,7 +342,7 @@ function createOptionsPanel()
 		hideShuffleCheckbox:SetChecked(SWT_HideButton == "true")
 		hideShuffleCheckbox:SetPoint("TOPLEFT", hideGladCheckbox, "BOTTOMLEFT", 0, -8)
 
-		local hideBlitzCheckbox = newCheckbox("Never show BLITZ STRATEGIST button on this character",
+		local hideBlitzCheckbox = newCheckbox("Hide Blitz button on this character",
 			function(self, value)
 				if value == true then
 					setCharBlitzSavedVariable("hide")
