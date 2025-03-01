@@ -33,57 +33,30 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
 	end
 end)
 
+function createButton(name, parentFrame, achievementId)
+	local button = CreateFrame("Button", name, parentFrame, "UIPanelButtonTemplate")
+	button:SetSize(25, 25)
+	button:SetText(">")
+	button:SetPoint("RIGHT", 10, 0)
+
+	button:SetScript("OnClick", function()
+		if not seasonActive then
+			showNoActiveSeasonAlert()
+		elseif achievementId == 0 then
+			showIDMissingForSeasonAlert()
+		else
+			C_ContentTracking.ToggleTracking(2, achievementId, 2)
+		end
+	end)
+
+	return button
+end
+
 function createButtons()
-	-- ConquestFrame is not nil as Blizzard_PVPUI has loaded
-	GWT_Button = CreateFrame("Button", "GWTButton", ConquestFrame.Arena3v3, "UIPanelButtonTemplate")
-	GWT_Button:SetSize(25, 25)
-	GWT_Button:SetText(">")
-	GWT_Button:SetPoint("RIGHT", 10, 0)
-
-	GWT_Button:SetScript("OnClick", function()
-		-- Check that theres a valid achievement ID and not already obtained
-		if not seasonActive then
-			showNoActiveSeasonAlert()
-		elseif currentGladAchievementId == 0 then
-			showIDMissingForSeasonAlert()
-		else
-			C_ContentTracking.ToggleTracking(2, currentGladAchievementId, 2)
-		end
-	end)
-
-	-- ConquestFrame is not nil as Blizzard_PVPUI has loaded
-	SWT_Button = CreateFrame("Button", "SWTButton", ConquestFrame.RatedSoloShuffle, "UIPanelButtonTemplate")
-	SWT_Button:SetSize(25, 25)
-	SWT_Button:SetText(">")
-	SWT_Button:SetPoint("RIGHT", 10, 0)
-
-	SWT_Button:SetScript("OnClick", function()
-		-- Check that theres a valid achievement ID and not already obtained
-		if not seasonActive then
-			showNoActiveSeasonAlert()
-		elseif currentLegendAchievementId == 0 then
-			showIDMissingForSeasonAlert()
-		else
-			C_ContentTracking.ToggleTracking(2, currentLegendAchievementId, 2)
-		end
-	end)
-
-	-- ConquestFrame is not nil as Blizzard_PVPUI has loaded
-	BWT_Button = CreateFrame("Button", "BWTButton", ConquestFrame.RatedBGBlitz, "UIPanelButtonTemplate")
-	BWT_Button:SetSize(25, 25)
-	BWT_Button:SetText(">")
-	BWT_Button:SetPoint("RIGHT", 10, 0)
-
-	BWT_Button:SetScript("OnClick", function()
-		-- Check that theres a valid achievement ID and not already obtained
-		if not seasonActive then
-			showNoActiveSeasonAlert()
-		elseif currentBlitzAchievementId == 0 then
-			showIDMissingForSeasonAlert()
-		else
-			C_ContentTracking.ToggleTracking(2, currentBlitzAchievementId, 2)
-		end
-	end)
+	-- Create each button with its specific parameters
+	GWT_Button = createButton("GWTButton", ConquestFrame.Arena3v3, currentGladAchievementId)
+	SWT_Button = createButton("SWTButton", ConquestFrame.RatedSoloShuffle, currentLegendAchievementId)
+	BWT_Button = createButton("BWTButton", ConquestFrame.RatedBGBlitz, currentBlitzAchievementId)
 end
 
 function showNoActiveSeasonAlert()
