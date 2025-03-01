@@ -13,4 +13,4 @@ Adds 3 buttons to the rated PVP tab:
 
 - **/gsbt** -- open the options panel
 
-![Screenshot of options panel](https://imgur.com/0AVi3IY.png)
+![Screenshot of options panel](https://imgur.com/HFb94b8.png)
