@@ -14,7 +14,3 @@ Adds 3 buttons to the rated PVP tab:
 - **/gsbt** -- open the options panel
 
 ![Screenshot of options panel](https://imgur.com/0AVi3IY.png)
-
-##### Note:
-
-- Each button is automatically hidden if the character (not account) has **completed** the achievement

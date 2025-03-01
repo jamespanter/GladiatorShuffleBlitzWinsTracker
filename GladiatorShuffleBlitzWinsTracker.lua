@@ -1,9 +1,8 @@
-local GWTVersion, seasonActive, currentGladAchievementId, currentLegendAchievementId, currentBlitzAchievementId, characterHasObtainedGladAchievement, characterHasObtainedLegendAchievement, characterHasObtainedBlitzAchievement, GWT_Button, SWT_Button, BWT_Button
+local GWTVersion, seasonActive, currentGladAchievementId, currentLegendAchievementId, currentBlitzAchievementId, GWT_Button, SWT_Button, BWT_Button
 
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:RegisterEvent("PLAYER_LOGIN")
-eventFrame:RegisterEvent("ACHIEVEMENT_EARNED")
 eventFrame:SetScript("OnEvent", function(self, event, arg1)
 	if event == "ADDON_LOADED" and arg1 == "GladiatorShuffleBlitzWinsTracker" then
 		-- Set character glad saved variable if none
@@ -41,22 +40,9 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
 
 		setCurrentPVPSeasonAchievementIds()
 
-		setCharacterHasObtainedGladAchievement()
-		setCharacterHasObtainedShuffleLegendAchievement()
-		setCharacterHasObtainedBlitzStrategistAchievement()
-
 		if GWT_LoginIntro == "true" then
 			print("|cff33ff99Gladiator, Shuffle & Blitz Wins Tracker|r - use |cffFF4500/gsbt|r to open options")
 		end
-	end
-
-	-- Check if button should hide after achievement obtained during session
-	if event == "ACHIEVEMENT_EARNED" and arg1 == currentGladAchievementId then
-		setCharacterHasObtainedGladAchievement()
-		setCharacterHasObtainedShuffleLegendAchievement()
-		setCharacterHasObtainedBlitzStrategistAchievement()
-
-		updateButtonsVisibility()
 	end
 end)
 
@@ -73,7 +59,7 @@ function createButtons()
 			showNoActiveSeasonAlert()
 		elseif currentGladAchievementId == 0 then
 			showIDMissingForSeasonAlert()
-		elseif not characterHasObtainedGladAchievement then
+		else
 			C_ContentTracking.ToggleTracking(2, currentGladAchievementId, 2)
 		end
 	end)
@@ -90,7 +76,7 @@ function createButtons()
 			showNoActiveSeasonAlert()
 		elseif currentLegendAchievementId == 0 then
 			showIDMissingForSeasonAlert()
-		elseif not characterHasObtainedLegendAchievement then
+		else
 			C_ContentTracking.ToggleTracking(2, currentLegendAchievementId, 2)
 		end
 	end)
@@ -107,7 +93,7 @@ function createButtons()
 			showNoActiveSeasonAlert()
 		elseif currentBlitzAchievementId == 0 then
 			showIDMissingForSeasonAlert()
-		elseif not characterHasObtainedBlitzAchievement then
+		else
 			C_ContentTracking.ToggleTracking(2, currentBlitzAchievementId, 2)
 		end
 	end)
@@ -138,98 +124,20 @@ function updateButtonsVisibility()
 end
 
 function shouldShowGladButton()
-	-- Check if button visibility has been overridden
-	if GWT_HideButton == "default" then
-		if characterHasObtainedGladAchievement then
-			return false
-		else
-			return true
-		end
-	elseif GWT_HideButton == "true" then
-		return false
-	elseif GWT_HideButton == "false" then
-		if characterHasObtainedGladAchievement then
-			return false
-		else
-			return true
-		end
-	end
+	return GWT_HideButton ~= "true"
 end
 
 function shouldShowShuffleButton()
-	-- Check if button visibility has been overridden
-	if SWT_HideButton == "default" then
-		if characterHasObtainedLegendAchievement then
-			return false
-		else
-			return true
-		end
-	elseif SWT_HideButton == "true" then
-		return false
-	elseif SWT_HideButton == "false" then
-		if characterHasObtainedLegendAchievement then
-			return false
-		else
-			return true
-		end
-	end
+	return SWT_HideButton ~= "true"
 end
 
 function shouldShowBlitzButton()
-	-- Check if button visibility has been overridden
-	if BWT_HideButton == "default" then
-		if characterHasObtainedBlitzAchievement then
-			return false
-		else
-			return true
-		end
-	elseif BWT_HideButton == "true" then
-		return false
-	elseif BWT_HideButton == "false" then
-		if characterHasObtainedBlitzAchievement then
-			return false
-		else
-			return true
-		end
-	end
+	return BWT_HideButton ~= "true"
 end
 
 function setGWTVersion()
 	local version = C_AddOns.GetAddOnMetadata("GladiatorShuffleBlitzWinsTracker", "Version")
 	GWTVersion = version
-end
-
-function setCharacterHasObtainedGladAchievement()
-	if currentGladAchievementId ~= 0 then
-		local id, _, _, completed, _, _, _, _, _, _, _, _, wasEarnedByMe = GetAchievementInfo(currentGladAchievementId)
-		if completed and wasEarnedByMe then
-			characterHasObtainedGladAchievement = true
-		else
-			characterHasObtainedGladAchievement = false
-		end
-	end
-end
-
-function setCharacterHasObtainedShuffleLegendAchievement()
-	if currentLegendAchievementId ~= 0 then
-		local id, _, _, completed, _, _, _, _, _, _, _, _, wasEarnedByMe = GetAchievementInfo(currentLegendAchievementId)
-		if completed and wasEarnedByMe then
-			characterHasObtainedLegendAchievement = true
-		else
-			characterHasObtainedLegendAchievement = false
-		end
-	end
-end
-
-function setCharacterHasObtainedBlitzStrategistAchievement()
-	if currentBlitzAchievementId ~= 0 then
-		local id, _, _, completed, _, _, _, _, _, _, _, _, wasEarnedByMe = GetAchievementInfo(currentBlitzAchievementId)
-		if completed and wasEarnedByMe then
-			characterHasObtainedBlitzAchievement = true
-		else
-			characterHasObtainedBlitzAchievement = false
-		end
-	end
 end
 
 function setCurrentPVPSeasonAchievementIds()
