@@ -5,28 +5,15 @@ eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:RegisterEvent("PLAYER_LOGIN")
 eventFrame:SetScript("OnEvent", function(self, event, arg1)
 	if event == "ADDON_LOADED" and arg1 == "GladiatorShuffleBlitzWinsTracker" then
-		-- Set character glad saved variable if none
-		if not GWT_HideButton then
-			GWT_HideButton = "default"
-		end
-
-		-- Set character shuffle saved variable if none
-		if not SWT_HideButton then
-			SWT_HideButton = "default"
-		end
-
-		-- Set character blitz saved variable if none
-		if not BWT_HideButton then
-			BWT_HideButton = "default"
-		end
-
-		-- Set account saved variable if none
-		if not GWT_LoginIntro then
-			GWT_LoginIntro = "true"
-		end
+		-- Initialize character and account saved variables if not set
+		GWT_HideButton = GWT_HideButton or "default"
+		SWT_HideButton = SWT_HideButton or "default"
+		BWT_HideButton = BWT_HideButton or "default"
+		GWT_LoginIntro = GWT_LoginIntro or "true"
 
 		registerOptionsPanel()
 	end
+
 
 	-- Only setup the button once the parent frame has loaded
 	if event == "ADDON_LOADED" and arg1 == "Blizzard_PVPUI" then
