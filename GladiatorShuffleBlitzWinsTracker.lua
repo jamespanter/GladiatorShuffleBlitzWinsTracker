@@ -24,11 +24,10 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
 	-- Setup variables
 	if event == "PLAYER_LOGIN" then
 		setGWTVersion()
-
 		setCurrentPVPSeasonAchievementIds()
 
 		if GWT_LoginIntro == "true" then
-			print("|cff33ff99Gladiator, Shuffle & Blitz Wins Tracker|r - use |cffFF4500/gsbt|r to open options")
+			print("|cff33ff99Gladiator, Shuffle & Blitz Wins Tracker|r - use |cffFF4500 /gsbt |r to open options")
 		end
 	end
 end)
@@ -45,7 +44,13 @@ function createButton(name, parentFrame, achievementId)
 		elseif achievementId == 0 then
 			showIDMissingForSeasonAlert()
 		else
-			C_ContentTracking.ToggleTracking(2, achievementId, 2)
+			local id, _, _, completed, _, _, _, _, _, _, _, _, wasEarnedByMe = GetAchievementInfo(
+				currentGladAchievementId)
+			if completed and wasEarnedByMe then
+				showAlreadyCompletedAlert()
+			else
+				C_ContentTracking.ToggleTracking(2, achievementId, 2)
+			end
 		end
 	end)
 
@@ -65,6 +70,10 @@ end
 
 function showIDMissingForSeasonAlert()
 	message("|cffffff00Achievement missing for current season - please update addon.|r")
+end
+
+function showAlreadyCompletedAlert()
+	message("|cFF00FF00This character has already completed the achievement.|r")
 end
 
 function updateButtonsVisibility()
