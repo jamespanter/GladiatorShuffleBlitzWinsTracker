@@ -22,6 +22,6 @@ AchievementIDs = {
     BlitzStrategist = {
         [38] = 40233, -- Strategist: The War Within Season 1
         [39] = 41363, -- Strategist: The War Within Season 2
-        [40] = 42024, -- Strategist: The War Within Season 2
+        [40] = 42024, -- Strategist: The War Within Season 3
     },
 }
