@@ -40,6 +40,13 @@ StaticPopupDialogs["GSBT_ALERT_POPUP"] = StaticPopupDialogs["GSBT_ALERT_POPUP"] 
 	whileDead = true,
 	hideOnEscape = true,
 	preferredIndex = 3,
+	OnShow = function(self)
+		local popupText = _G[self:GetName() .. "Text"]
+		if popupText and GameFontHighlightLarge then
+			local font, size, flags = GameFontHighlightLarge:GetFont()
+			popupText:SetFont(font, size, flags)
+		end
+	end,
 }
 
 local function showAlertMessage(text)
