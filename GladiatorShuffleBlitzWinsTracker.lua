@@ -32,6 +32,24 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
 	end
 end)
 
+-- Recreate the removed global `message` alert using the StaticPopup system
+StaticPopupDialogs["GSBT_ALERT_POPUP"] = StaticPopupDialogs["GSBT_ALERT_POPUP"] or {
+	text = "%s",
+	button1 = OKAY,
+	timeout = 0,
+	whileDead = true,
+	hideOnEscape = true,
+	preferredIndex = 3,
+}
+
+local function showAlertMessage(text)
+	if not text then
+		return
+	end
+
+	StaticPopup_Show("GSBT_ALERT_POPUP", text)
+end
+
 function createButton(name, parentFrame, achievementId)
 	local button = CreateFrame("Button", name, parentFrame, "UIPanelButtonTemplate")
 	button:SetSize(25, 25)
@@ -65,15 +83,15 @@ function createButtons()
 end
 
 function showNoActiveSeasonAlert()
-	message("|cffffff00No active PVP season found.|r")
+	showAlertMessage("|cffffff00No active PVP season found.|r")
 end
 
 function showIDMissingForSeasonAlert()
-	message("|cffffff00Achievement missing for current season - please update addon.|r")
+	showAlertMessage("|cffffff00Achievement missing for current season - please update addon.|r")
 end
 
 function showAlreadyCompletedAlert()
-	message("|cFF00FF00This character has already completed the achievement.|r")
+	showAlertMessage("|cFF00FF00This character has already completed the achievement.|r")
 end
 
 function updateButtonsVisibility()
