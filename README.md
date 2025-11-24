@@ -6,11 +6,11 @@ Adds 3 buttons to the rated PVP tab:
 2. Tracks the **Shuffle Legend** achievement for the current PVP season
 3. Tracks the **Blitz Strategist** achievement for the current PVP season
 
-![Screenshot of buttons](https://imgur.com/LDQYW0V.png)
-![Screenshot of achievements](https://imgur.com/9yPlcMJ.png)
+![Screenshot of buttons](https://raw.githubusercontent.com/jamespanter/GladiatorShuffleBlitzWinsTracker/master/.github/assets/buttons.png)
+![Screenshot of achievements](https://raw.githubusercontent.com/jamespanter/GladiatorShuffleBlitzWinsTracker/master/.github/assets/achievements.png)
 
 ### Commands:
 
 - **/gsbt** -- open the options panel
 
-![Screenshot of options panel](https://imgur.com/HFb94b8.png)
+![Screenshot of options panel](https://raw.githubusercontent.com/jamespanter/GladiatorShuffleBlitzWinsTracker/master/.github/assets/options.png)
