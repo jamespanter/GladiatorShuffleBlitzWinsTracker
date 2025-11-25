@@ -11,6 +11,7 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
 		BWT_HideButton = BWT_HideButton or "default"
 		GWT_LoginIntro = GWT_LoginIntro or "true"
 
+		setGWTVersion()
 		registerOptionsPanel()
 	end
 
@@ -23,7 +24,6 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
 
 	-- Setup variables
 	if event == "PLAYER_LOGIN" then
-		setGWTVersion()
 		setCurrentPVPSeasonAchievementIds()
 
 		if GWT_LoginIntro == "true" then
@@ -226,99 +226,92 @@ function createOptionsPanel()
 		return check
 	end
 
-	frame:SetScript("OnShow", function()
-		local title = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-		title:SetPoint("TOPLEFT", 16, -16)
-		title:SetText("Gladiator, Shuffle & Blitz Wins Tracker")
+	local title = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+	title:SetPoint("TOPLEFT", 16, -16)
+	title:SetText("Gladiator, Shuffle & Blitz Wins Tracker")
 
-		local charTitle = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-		charTitle:SetText("|cffffff00Character Specific Settings|r")
-		charTitle:SetPoint("TOPLEFT", title, "BOTTOMLEFT", -2, -16)
+	local charTitle = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+	charTitle:SetText("|cffffff00Character Specific Settings|r")
+	charTitle:SetPoint("TOPLEFT", title, "BOTTOMLEFT", -2, -16)
 
-		local hideGladCheckbox = newCheckbox("Hide |cff33ff993v3|r button on this character",
-			function(self, value)
-				if value == true then
-					setCharGladSavedVariable("hide")
-				elseif value == false then
-					setCharGladSavedVariable("show")
-				end
+	local hideGladCheckbox = newCheckbox("Hide |cff33ff993v3|r button on this character",
+		function(self, value)
+			if value == true then
+				setCharGladSavedVariable("hide")
+			elseif value == false then
+				setCharGladSavedVariable("show")
 			end
-		)
-		-- Ensure the checkbox state is set based on the current value
+		end
+	)
+	hideGladCheckbox:SetChecked(GWT_HideButton == "true")
+	hideGladCheckbox:SetPoint("TOPLEFT", charTitle, "BOTTOMLEFT", 20, -16)
+
+	local hideShuffleCheckbox = newCheckbox("Hide |cff33ff99Shuffle|r button on this character",
+		function(self, value)
+			if value == true then
+				setCharShuffleSavedVariable("hide")
+			elseif value == false then
+				setCharShuffleSavedVariable("show")
+			end
+		end
+	)
+	hideShuffleCheckbox:SetChecked(SWT_HideButton == "true")
+	hideShuffleCheckbox:SetPoint("TOPLEFT", hideGladCheckbox, "BOTTOMLEFT", 0, -8)
+
+	local hideBlitzCheckbox = newCheckbox("Hide |cff33ff99Blitz|r button on this character",
+		function(self, value)
+			if value == true then
+				setCharBlitzSavedVariable("hide")
+			elseif value == false then
+				setCharBlitzSavedVariable("show")
+			end
+		end
+	)
+	hideBlitzCheckbox:SetChecked(BWT_HideButton == "true")
+	hideBlitzCheckbox:SetPoint("TOPLEFT", hideShuffleCheckbox, "BOTTOMLEFT", 0, -8)
+
+	local resetButton = CreateFrame("Button", "GTWResetButton", frame, "UIPanelButtonTemplate")
+	resetButton:SetText("Reset")
+	resetButton:SetWidth(90)
+	resetButton:SetHeight(30)
+	resetButton:SetPoint("TOPLEFT", hideBlitzCheckbox, "BOTTOMLEFT", -20, -15)
+	resetButton:SetScript("OnClick", function()
+		setCharGladSavedVariable("reset")
+		setCharShuffleSavedVariable("reset")
+		setCharBlitzSavedVariable("reset")
+
 		hideGladCheckbox:SetChecked(GWT_HideButton == "true")
-		hideGladCheckbox:SetPoint("TOPLEFT", charTitle, "BOTTOMLEFT", 20, -16)
-
-		local hideShuffleCheckbox = newCheckbox("Hide |cff33ff99Shuffle|r button on this character",
-			function(self, value)
-				if value == true then
-					setCharShuffleSavedVariable("hide")
-				elseif value == false then
-					setCharShuffleSavedVariable("show")
-				end
-			end
-		)
-		-- Ensure the checkbox state is set based on the current value
 		hideShuffleCheckbox:SetChecked(SWT_HideButton == "true")
-		hideShuffleCheckbox:SetPoint("TOPLEFT", hideGladCheckbox, "BOTTOMLEFT", 0, -8)
-
-		local hideBlitzCheckbox = newCheckbox("Hide |cff33ff99Blitz|r button on this character",
-			function(self, value)
-				if value == true then
-					setCharBlitzSavedVariable("hide")
-				elseif value == false then
-					setCharBlitzSavedVariable("show")
-				end
-			end
-		)
-		-- Ensure the checkbox state is set based on the current value
 		hideBlitzCheckbox:SetChecked(BWT_HideButton == "true")
-		hideBlitzCheckbox:SetPoint("TOPLEFT", hideShuffleCheckbox, "BOTTOMLEFT", 0, -8)
-
-		local resetButton = CreateFrame("Button", "GTWResetButton", frame, "UIPanelButtonTemplate")
-		resetButton:SetText("Reset")
-		resetButton:SetWidth(90)
-		resetButton:SetHeight(30)
-		resetButton:SetPoint("TOPLEFT", hideBlitzCheckbox, "BOTTOMLEFT", -20, -15)
-		resetButton:SetScript("OnClick", function()
-			setCharGladSavedVariable("reset")
-			setCharShuffleSavedVariable("reset")
-			setCharBlitzSavedVariable("reset")
-
-			hideGladCheckbox:SetChecked(GWT_HideButton == "true")
-			hideShuffleCheckbox:SetChecked(SWT_HideButton == "true")
-			hideBlitzCheckbox:SetChecked(BWT_HideButton == "true")
-		end)
-
-		local accountSettingsTitle = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-		accountSettingsTitle:SetText("|cffffff00Account Settings|r")
-		accountSettingsTitle:SetPoint("TOPLEFT", resetButton, "BOTTOMLEFT", -2, -16)
-
-		local hideIntroCheckbox = newCheckbox("Disable login message",
-			function(self, value)
-				if value == true then
-					setAccountSavedVariable("hide")
-				elseif value == false then
-					setAccountSavedVariable("show")
-				end
-			end
-		)
-		-- Ensure the checkbox state is set based on the current value
-		hideIntroCheckbox:SetChecked(GWT_LoginIntro ~= "true")
-		hideIntroCheckbox:SetPoint("TOPLEFT", accountSettingsTitle, "TOPLEFT", 20, -25)
-
-		local versionText = frame:CreateFontString(nil, "ARTWORK", "GameFontDisable")
-		versionText:SetText("|cffffff00Version:|r |cffffffff" .. GWTVersion .. "|r")
-		versionText:SetJustifyH("RIGHT")
-		versionText:SetSize(600, 40)
-		versionText:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, -5)
-
-		local authorText = frame:CreateFontString(nil, "ARTWORK", "GameFontDisable")
-		authorText:SetText("|cffffff00Author:|r |cffffffffDezopri|r")
-		authorText:SetJustifyH("RIGHT")
-		authorText:SetSize(600, 40)
-		authorText:SetPoint("TOPLEFT", versionText, "TOPLEFT", 0, -20)
-
-		frame:SetScript("OnShow", nil)
 	end)
+
+	local accountSettingsTitle = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+	accountSettingsTitle:SetText("|cffffff00Account Settings|r")
+	accountSettingsTitle:SetPoint("TOPLEFT", resetButton, "BOTTOMLEFT", -2, -16)
+
+	local hideIntroCheckbox = newCheckbox("Disable login message",
+		function(self, value)
+			if value == true then
+				setAccountSavedVariable("hide")
+			elseif value == false then
+				setAccountSavedVariable("show")
+			end
+		end
+	)
+	hideIntroCheckbox:SetChecked(GWT_LoginIntro ~= "true")
+	hideIntroCheckbox:SetPoint("TOPLEFT", accountSettingsTitle, "TOPLEFT", 20, -25)
+
+	local versionText = frame:CreateFontString(nil, "ARTWORK", "GameFontDisable")
+	versionText:SetText("|cffffff00Version:|r |cffffffff" .. (GWTVersion or "Unknown") .. "|r")
+	versionText:SetJustifyH("RIGHT")
+	versionText:SetSize(600, 40)
+	versionText:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, -5)
+
+	local authorText = frame:CreateFontString(nil, "ARTWORK", "GameFontDisable")
+	authorText:SetText("|cffffff00Author:|r |cffffffffDezopri|r")
+	authorText:SetJustifyH("RIGHT")
+	authorText:SetSize(600, 40)
+	authorText:SetPoint("TOPLEFT", versionText, "TOPLEFT", 0, -20)
+
 	return frame
 end
