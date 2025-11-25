@@ -18,7 +18,6 @@ local function initializeSavedVariables()
 	GWT_LoginIntro = normalizeBool(GWT_LoginIntro, true)
 end
 
--- Recreate the removed global `message` alert using the StaticPopup system
 StaticPopupDialogs["GSBT_ALERT_POPUP"] = StaticPopupDialogs["GSBT_ALERT_POPUP"] or {
 	text = "%s",
 	button1 = OKAY,
